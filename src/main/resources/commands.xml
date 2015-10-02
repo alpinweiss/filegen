@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<config>
+	<step>
+		<command>h</command>
+		<className>eu.alpinweiss.filegen.command.steps.HelpStep</className>
+		<description>Display help</description>
+		<required>false</required>
+        <paramCount>0</paramCount>
+        <requiredParams>0</requiredParams>
+	</step>
+    <step>
+		<command>v</command>
+		<className>eu.alpinweiss.filegen.command.steps.AppVersionStep</className>
+		<description>Application version</description>
+		<required>false</required>
+        <paramCount>0</paramCount>
+        <requiredParams>0</requiredParams>
+	</step>
+	<step>
+		<command>s</command>
+		<className>eu.alpinweiss.filegen.command.steps.GenerateSimpleFileStep</className>
+		<description>Generate simple file</description>
+		<required>false</required>
+        <paramCount>2</paramCount>
+        <requiredParams>0</requiredParams>
+	</step>
+    <step>
+		<command>a</command>
+		<className>eu.alpinweiss.filegen.command.steps.GenerateAdvancedFileStep</className>
+		<description>Generate advanced file</description>
+		<required>false</required>
+        <paramCount>2</paramCount>
+        <requiredParams>0</requiredParams>
+	</step>
+
+    <step>
+		<command>x</command>
+		<className>eu.alpinweiss.filegen.command.steps.GenerateExcelXlsxFileStep</className>
+		<description>Generate XLSX file</description>
+		<required>false</required>
+        <paramCount>1</paramCount>
+        <requiredParams>0</requiredParams>
+	</step>
+</config>
