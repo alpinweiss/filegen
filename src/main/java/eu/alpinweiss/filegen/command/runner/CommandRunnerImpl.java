@@ -15,10 +15,10 @@
  */
 package eu.alpinweiss.filegen.command.runner;
 
-import java.util.Set;
-
 import eu.alpinweiss.filegen.command.CommandStep;
 import eu.alpinweiss.filegen.model.Model;
+
+import java.util.Set;
 
 /**
  * {@link CommandRunnerImpl}.

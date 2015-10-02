@@ -15,16 +15,17 @@
  */
 package eu.alpinweiss.filegen.service.impl;
 
-import java.io.*;
-import java.util.Date;
-import java.util.concurrent.CountDownLatch;
-
 import com.google.inject.Singleton;
 import eu.alpinweiss.filegen.model.Model;
-import eu.alpinweiss.filegen.util.StringProcessor;
 import eu.alpinweiss.filegen.service.GenerateAdvancedFileService;
+import eu.alpinweiss.filegen.util.StringProcessor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.util.Date;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * {@link GenerateAdvancedFileServiceImpl}.

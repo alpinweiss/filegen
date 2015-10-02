@@ -15,9 +15,12 @@
  */
 package eu.alpinweiss.filegen.model;
 
-import java.util.*;
-
 import eu.alpinweiss.filegen.command.CommandStep;
+
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * {@link Model}.

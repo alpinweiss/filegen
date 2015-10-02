@@ -15,9 +15,7 @@
  */
 package eu.alpinweiss.filegen.service;
 
-import com.google.inject.ImplementedBy;
 import eu.alpinweiss.filegen.model.Model;
-import eu.alpinweiss.filegen.service.impl.GenerateAdvancedFileServiceImpl;
 
 /**
  * {@link GenerateAdvancedFileService}.
@@ -25,7 +23,6 @@ import eu.alpinweiss.filegen.service.impl.GenerateAdvancedFileServiceImpl;
  * @author Aleksandrs.Severgins | <a href="http://alpinweiss.eu">SIA Alpinweiss</a>
  * 
  */
-@ImplementedBy(GenerateAdvancedFileServiceImpl.class)
 public interface GenerateAdvancedFileService {
 
     void generateFile(Model model, long iterations);

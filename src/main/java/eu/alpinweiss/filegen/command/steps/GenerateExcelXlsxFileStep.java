@@ -15,8 +15,6 @@
  */
 package eu.alpinweiss.filegen.command.steps;
 
-import com.google.inject.ImplementedBy;
-import eu.alpinweiss.filegen.command.steps.impl.GenerateExcelXlsxFileStepImpl;
 import eu.alpinweiss.filegen.command.CommandStep;
 
 /**
@@ -24,7 +22,6 @@ import eu.alpinweiss.filegen.command.CommandStep;
  *
  * @author Aleksandrs.Severgins | <a href="http://alpinweiss.eu">SIA Alpinweiss</a>
  */
-@ImplementedBy(GenerateExcelXlsxFileStepImpl.class)
 public interface GenerateExcelXlsxFileStep extends CommandStep {
 
     final static String XLSX_FILE = "x";

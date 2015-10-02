@@ -16,16 +16,13 @@
 
 package eu.alpinweiss.filegen.service;
 
-import com.google.inject.ImplementedBy;
 import com.google.inject.Injector;
-import eu.alpinweiss.filegen.service.impl.FdrServiceImpl;
 
 /**
  * {@link FdrService}.
  *
  * @author Aleksandrs.Severgins | <a href="http://alpinweiss.eu">SIA Alpinweiss</a>
  */
-@ImplementedBy(FdrServiceImpl.class)
 public interface FdrService {
 
     void setInjector(Injector injector);

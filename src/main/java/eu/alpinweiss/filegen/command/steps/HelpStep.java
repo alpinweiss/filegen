@@ -15,10 +15,7 @@
  */
 package eu.alpinweiss.filegen.command.steps;
 
-import eu.alpinweiss.filegen.command.steps.impl.HelpStepImpl;
 import eu.alpinweiss.filegen.command.CommandStep;
-
-import com.google.inject.ImplementedBy;
 
 /**
  * {@link HelpStep}.
@@ -26,7 +23,6 @@ import com.google.inject.ImplementedBy;
  * @author Aleksandrs.Severgins | <a href="http://alpinweiss.eu">SIA Alpinweiss</a>
  * 
  */
-@ImplementedBy(HelpStepImpl.class)
 public interface HelpStep extends CommandStep {
 	final static String HELP = "h";
 }

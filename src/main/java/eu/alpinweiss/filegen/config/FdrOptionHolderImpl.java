@@ -15,17 +15,16 @@
  */
 package eu.alpinweiss.filegen.config;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import eu.alpinweiss.filegen.command.CommandStep;
 import eu.alpinweiss.filegen.service.XmlConfigParser;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * {@link FdrOptionHolderImpl}.

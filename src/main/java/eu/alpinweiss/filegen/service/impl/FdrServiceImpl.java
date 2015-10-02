@@ -16,8 +16,9 @@
 
 package eu.alpinweiss.filegen.service.impl;
 
-import java.util.Map;
-
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.Singleton;
 import eu.alpinweiss.filegen.command.CommandStep;
 import eu.alpinweiss.filegen.command.runner.CommandRunner;
 import eu.alpinweiss.filegen.config.FdrOptionHolder;
@@ -25,9 +26,7 @@ import eu.alpinweiss.filegen.model.Model;
 import eu.alpinweiss.filegen.service.FdrService;
 import org.apache.commons.cli.*;
 
-import com.google.inject.Inject;
-import com.google.inject.Injector;
-import com.google.inject.Singleton;
+import java.util.Map;
 
 /**
  * {@link FdrServiceImpl}.

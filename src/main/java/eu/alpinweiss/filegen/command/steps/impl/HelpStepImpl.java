@@ -15,14 +15,13 @@
  */
 package eu.alpinweiss.filegen.command.steps.impl;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import eu.alpinweiss.filegen.command.steps.HelpStep;
 import eu.alpinweiss.filegen.config.FdrOptionHolder;
 import eu.alpinweiss.filegen.model.Model;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 /**
  * {@link HelpStepImpl}.

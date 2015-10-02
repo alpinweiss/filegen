@@ -16,9 +16,6 @@
 package eu.alpinweiss.filegen.command.steps;
 
 import eu.alpinweiss.filegen.command.CommandStep;
-import eu.alpinweiss.filegen.command.steps.impl.GenerateSimpleFileStepImpl;
-
-import com.google.inject.ImplementedBy;
 
 /**
  * Could be two parameters
@@ -29,7 +26,6 @@ import com.google.inject.ImplementedBy;
  * 
  * @author Aleksandrs.Severgins | <a href="http://alpinweiss.eu">SIA Alpinweiss</a>
  */
-@ImplementedBy(GenerateSimpleFileStepImpl.class)
 public interface GenerateSimpleFileStep extends CommandStep {
 
 	final static String SIMPLE_FILE = "s";

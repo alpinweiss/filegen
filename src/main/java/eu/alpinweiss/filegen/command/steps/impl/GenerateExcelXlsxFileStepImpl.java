@@ -108,7 +108,7 @@ public class GenerateExcelXlsxFileStepImpl implements GenerateExcelXlsxFileStep 
             }
 
 //            for (int i = 1; i < 1048575; i++) {  // max possible rows
-            for (int i = 1; i < 200000; i++) {
+            for (int i = 1; i < 150000; i++) {
 
                 row = sheet1.createRow(i);
                 System.out.println("Processed " + i + " rows");

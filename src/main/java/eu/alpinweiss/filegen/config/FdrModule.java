@@ -16,6 +16,16 @@
 package eu.alpinweiss.filegen.config;
 
 import com.google.inject.AbstractModule;
+import eu.alpinweiss.filegen.command.runner.CommandRunner;
+import eu.alpinweiss.filegen.command.runner.CommandRunnerImpl;
+import eu.alpinweiss.filegen.command.steps.*;
+import eu.alpinweiss.filegen.command.steps.impl.*;
+import eu.alpinweiss.filegen.service.FdrService;
+import eu.alpinweiss.filegen.service.GenerateAdvancedFileService;
+import eu.alpinweiss.filegen.service.XmlConfigParser;
+import eu.alpinweiss.filegen.service.impl.FdrServiceImpl;
+import eu.alpinweiss.filegen.service.impl.GenerateAdvancedFileServiceImpl;
+import eu.alpinweiss.filegen.service.impl.XmlConfigParserImpl;
 
 /**
  * {@link FdrModule}.
@@ -26,6 +36,16 @@ import com.google.inject.AbstractModule;
 public class FdrModule extends AbstractModule {
 	@Override
 	protected void configure() {
+        bind(CommandRunner.class).to(CommandRunnerImpl.class);
+        bind(AppVersionStep.class).to(AppVersionStepImpl.class);
+        bind(GenerateAdvancedFileStep.class).to(GenerateAdvancedFileStepImpl.class);
+        bind(GenerateExcelXlsxFileStep.class).to(GenerateExcelXlsxFileStepImpl.class);
+        bind(GenerateSimpleFileStep.class).to(GenerateSimpleFileStepImpl.class);
+        bind(HelpStep.class).to(HelpStepImpl.class);
+        bind(FdrOptionHolder.class).to(FdrOptionHolderImpl.class);
+        bind(FdrService.class).to(FdrServiceImpl.class);
+        bind(GenerateAdvancedFileService.class).to(GenerateAdvancedFileServiceImpl.class);
+        bind(XmlConfigParser.class).to(XmlConfigParserImpl.class);
 	}
 
 }

@@ -15,19 +15,16 @@
  */
 package eu.alpinweiss.filegen.config;
 
-import java.util.Map;
-
 import eu.alpinweiss.filegen.command.CommandStep;
 import org.apache.commons.cli.Options;
 
-import com.google.inject.ImplementedBy;
+import java.util.Map;
 
 /**
  * {@link FdrOptionHolder}.
  * 
  * @author Aleksandrs.Severgins | <a href="http://alpinweiss.eu">SIA Alpinweiss</a>
  */
-@ImplementedBy(FdrOptionHolderImpl.class)
 public interface FdrOptionHolder {
 
 	Options getAppOptions();

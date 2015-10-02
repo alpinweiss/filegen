@@ -15,9 +15,7 @@
  */
 package eu.alpinweiss.filegen.command.steps;
 
-import com.google.inject.ImplementedBy;
 import eu.alpinweiss.filegen.command.CommandStep;
-import eu.alpinweiss.filegen.command.steps.impl.GenerateAdvancedFileStepImpl;
 
 /**
  * Could be two parameters
@@ -28,7 +26,6 @@ import eu.alpinweiss.filegen.command.steps.impl.GenerateAdvancedFileStepImpl;
  *
  * @author Aleksandrs.Severgins | <a href="http://alpinweiss.eu">SIA Alpinweiss</a>
  */
-@ImplementedBy(GenerateAdvancedFileStepImpl.class)
 public interface GenerateAdvancedFileStep extends CommandStep {
 
 	final static String ADVANCED_FILE = "a";

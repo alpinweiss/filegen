@@ -17,15 +17,12 @@ package eu.alpinweiss.filegen.command.runner;
 
 import eu.alpinweiss.filegen.model.Model;
 
-import com.google.inject.ImplementedBy;
-
 /**
  * {@link CommandRunner}.
  * 
  * @author Aleksandrs.Severgins | <a href="http://alpinweiss.eu">SIA Alpinweiss</a>
  * 
  */
-@ImplementedBy(CommandRunnerImpl.class)
 public interface CommandRunner {
 
 	void run(Model model);

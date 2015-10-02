@@ -1,18 +1,16 @@
 package eu.alpinweiss.filegen.service.impl;
 
-import java.io.InputStream;
-import java.util.HashSet;
-import java.util.Set;
+import com.google.inject.Singleton;
+import eu.alpinweiss.filegen.config.FdrStep;
+import eu.alpinweiss.filegen.service.XmlConfigParser;
+import org.w3c.dom.CharacterData;
+import org.w3c.dom.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
-import eu.alpinweiss.filegen.config.FdrStep;
-import eu.alpinweiss.filegen.service.XmlConfigParser;
-import org.w3c.dom.*;
-import org.w3c.dom.CharacterData;
-
-import com.google.inject.Singleton;
+import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * {@link XmlConfigParserImpl}.
