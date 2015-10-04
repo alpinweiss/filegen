@@ -24,6 +24,6 @@ import eu.alpinweiss.filegen.command.CommandStep;
  */
 public interface AppVersionStep extends CommandStep {
 
-	final static String REPORT_DIRECTORY = "v";
+	String REPORT_DIRECTORY = "v";
 
 }

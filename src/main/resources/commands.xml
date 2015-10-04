@@ -32,7 +32,6 @@
         <paramCount>2</paramCount>
         <requiredParams>0</requiredParams>
 	</step>
-
     <step>
 		<command>x</command>
 		<className>eu.alpinweiss.filegen.command.steps.GenerateExcelXlsxFileStep</className>
@@ -40,5 +39,13 @@
 		<required>false</required>
         <paramCount>1</paramCount>
         <requiredParams>0</requiredParams>
+	</step>
+	<step>
+		<command>i</command>
+		<className>eu.alpinweiss.filegen.command.steps.ReadInputParametersStep</className>
+		<description>Read File Generation Parameters from xlsx file</description>
+		<required>false</required>
+        <paramCount>1</paramCount>
+        <requiredParams>1</requiredParams>
 	</step>
 </config>

@@ -24,6 +24,6 @@ import eu.alpinweiss.filegen.command.CommandStep;
  */
 public interface GenerateExcelXlsxFileStep extends CommandStep {
 
-    final static String XLSX_FILE = "x";
+    String XLSX_FILE = "x";
 
 }

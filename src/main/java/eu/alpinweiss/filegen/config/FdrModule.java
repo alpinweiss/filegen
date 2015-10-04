@@ -46,6 +46,7 @@ public class FdrModule extends AbstractModule {
         bind(FdrService.class).to(FdrServiceImpl.class);
         bind(GenerateAdvancedFileService.class).to(GenerateAdvancedFileServiceImpl.class);
         bind(XmlConfigParser.class).to(XmlConfigParserImpl.class);
+        bind(ReadInputParametersStep.class).to(ReadInputParametersStepImpl.class);
 	}
 
 }

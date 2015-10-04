@@ -28,6 +28,6 @@ import eu.alpinweiss.filegen.command.CommandStep;
  */
 public interface GenerateSimpleFileStep extends CommandStep {
 
-	final static String SIMPLE_FILE = "s";
+	String SIMPLE_FILE = "s";
 
 }

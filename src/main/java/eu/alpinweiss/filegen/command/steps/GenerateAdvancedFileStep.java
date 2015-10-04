@@ -28,6 +28,6 @@ import eu.alpinweiss.filegen.command.CommandStep;
  */
 public interface GenerateAdvancedFileStep extends CommandStep {
 
-	final static String ADVANCED_FILE = "a";
+	String ADVANCED_FILE = "a";
 
 }

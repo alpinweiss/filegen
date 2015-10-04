@@ -1,4 +1,4 @@
-/*   
+/*
  * Copyright 2011 Alexander Severgin
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,13 +16,16 @@
 package eu.alpinweiss.filegen.command.steps;
 
 import eu.alpinweiss.filegen.command.CommandStep;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
- * {@link HelpStep}.
- * 
+ * {@link ReadInputParametersStep}.
+ *
  * @author Aleksandrs.Severgins | <a href="http://alpinweiss.eu">SIA Alpinweiss</a>
- * 
  */
-public interface HelpStep extends CommandStep {
-	String HELP = "h";
+public interface ReadInputParametersStep extends CommandStep {
+
+	String INPUT_PARAMETER = "i";
+
 }
