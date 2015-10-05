@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * {@link StringProcessor}.
@@ -55,7 +56,7 @@ public class StringProcessor implements Runnable {
         try {
             startSignal.await();
 
-            Random randomGenerator = new Random();
+            ThreadLocalRandom randomGenerator = ThreadLocalRandom.current();
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
 
             System.out.println(Thread.currentThread().getName() + " starts generating " + iterationCount + " rows");
