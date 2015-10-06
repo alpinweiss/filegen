@@ -162,11 +162,15 @@ public class GenerateExcelXlsxFileStepImpl implements GenerateExcelXlsxFileStep 
         } else if ("Integer".equalsIgnoreCase(type)) {
             String pattern = fieldDefinition.getPattern();
             if (pattern != null) {
-                return String.format(pattern, randomGenerator.nextInt());
+                return String.format(pattern, randomGenerator.nextInt(Integer.MAX_VALUE));
             }
             return new Integer(randomGenerator.nextInt()).toString();
         } else if ("Date".equalsIgnoreCase(type)) {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(fieldDefinition.getPattern());
+            String pattern = fieldDefinition.getPattern();
+            if (pattern == null || "".equals(pattern)) {
+                pattern = "mm/DD/YYYY";
+            }
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
             return simpleDateFormat.format(new Date());
         }
         return "";

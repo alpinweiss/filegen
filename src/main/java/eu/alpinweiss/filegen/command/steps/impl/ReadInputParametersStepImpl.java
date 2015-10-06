@@ -108,7 +108,11 @@ public class ReadInputParametersStepImpl implements ReadInputParametersStep {
                 fieldDefinition.setType((String) field[1]);
                 Double fieldLength = (Double) field[2];
                 fieldDefinition.setLength(fieldLength != null ? fieldLength.intValue() : 0);
-                fieldDefinition.setPattern((String) field[3]);
+                if (field[3] != null && field[3] instanceof Number) {
+                    fieldDefinition.setPattern(field[3].toString());
+                } else {
+                    fieldDefinition.setPattern((String) field[3]);
+                }
                 model.getFieldDefinitionList().add(fieldDefinition);
             }
 
@@ -135,7 +139,7 @@ public class ReadInputParametersStepImpl implements ReadInputParametersStep {
         if (o instanceof Number) {
             return o.toString();
         }
-        return null;
+        return (String) o;
     }
 
     private long readIterationCount(XSSFSheet sheet) {
