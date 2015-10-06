@@ -15,7 +15,7 @@
  */
 package eu.alpinweiss.filegen.util;
 
-import org.apache.poi.ss.usermodel.CellStyle;
+import eu.alpinweiss.filegen.model.FieldDefinition;
 
 /**
  * {@link MyTableInfo}.
@@ -24,20 +24,8 @@ import org.apache.poi.ss.usermodel.CellStyle;
  */
 public class MyTableInfo {
 
-    String fieldName = null;
     String fieldText = null;
-    int fieldType = 0;
-    int fieldSize = 0;
-    int fieldDecimal = 0;
-    CellStyle cellStyle = null;
-
-    public String getFieldName() {
-        return fieldName;
-    }
-
-    public void setFieldName(String fieldName) {
-        this.fieldName = fieldName;
-    }
+    FieldDefinition fieldDefinition;
 
     public String getFieldText() {
         return fieldText;
@@ -47,37 +35,11 @@ public class MyTableInfo {
         this.fieldText = fieldText;
     }
 
-    public int getFieldType() {
-        return fieldType;
+    public FieldDefinition getFieldDefinition() {
+        return fieldDefinition;
     }
 
-    public void setFieldType(int fieldType) {
-        this.fieldType = fieldType;
+    public void setFieldDefinition(FieldDefinition fieldDefinition) {
+        this.fieldDefinition = fieldDefinition;
     }
-
-    public int getFieldSize() {
-        return fieldSize;
-    }
-
-    public void setFieldSize(int fieldSize) {
-        this.fieldSize = fieldSize;
-    }
-
-    public int getFieldDecimal() {
-        return fieldDecimal;
-    }
-
-    public void setFieldDecimal(int fieldDecimal) {
-        this.fieldDecimal = fieldDecimal;
-    }
-
-    public CellStyle getCellStyle() {
-        return cellStyle;
-    }
-
-    public void setCellStyle(CellStyle cellStyle) {
-        this.cellStyle = cellStyle;
-    }
-
-
 }

@@ -17,10 +17,7 @@ package eu.alpinweiss.filegen.model;
 
 import eu.alpinweiss.filegen.command.CommandStep;
 
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * {@link Model}.
@@ -30,10 +27,15 @@ import java.util.Set;
  */
 public class Model {
 
+    private List<FieldDefinition> fieldDefinitionList = new ArrayList<FieldDefinition>();
+
 	private final Map<String, String> parametersMap = new HashMap<String, String>();
 	private final Set<CommandStep> commands = new LinkedHashSet<CommandStep>();
+    private long rowCount;
+    private String lineSeparator;
+    private String outputFileName;
 
-	public Map<String, String> getParametersMap() {
+    public Map<String, String> getParametersMap() {
 		return parametersMap;
 	}
 
@@ -53,4 +55,35 @@ public class Model {
 		this.commands.add(command);
 	}
 
+    public List<FieldDefinition> getFieldDefinitionList() {
+        return fieldDefinitionList;
+    }
+
+    public void setFieldDefinitionList(List<FieldDefinition> fieldDefinitionList) {
+        this.fieldDefinitionList = fieldDefinitionList;
+    }
+
+    public void setRowCount(long rowCount) {
+        this.rowCount = rowCount;
+    }
+
+    public long getRowCount() {
+        return rowCount;
+    }
+
+    public void setLineSeparator(String lineSeparator) {
+        this.lineSeparator = lineSeparator;
+    }
+
+    public String getLineSeparator() {
+        return lineSeparator;
+    }
+
+    public void setOutputFileName(String outputFileName) {
+        this.outputFileName = outputFileName;
+    }
+
+    public String getOutputFileName() {
+        return outputFileName;
+    }
 }

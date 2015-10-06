@@ -16,8 +16,10 @@
 package eu.alpinweiss.filegen.command.steps.impl;
 
 import eu.alpinweiss.filegen.command.steps.GenerateExcelXlsxFileStep;
+import eu.alpinweiss.filegen.model.FieldDefinition;
 import eu.alpinweiss.filegen.model.Model;
 import eu.alpinweiss.filegen.util.MyTableInfo;
+import eu.alpinweiss.filegen.util.RandomStringGenerator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.*;
@@ -26,10 +28,9 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 
 import java.io.FileOutputStream;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.UUID;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * {@link GenerateExcelXlsxFileStepImpl}.
@@ -40,14 +41,16 @@ public class GenerateExcelXlsxFileStepImpl implements GenerateExcelXlsxFileStep 
 
     private final static Logger LOGGER = LogManager.getLogger(GenerateExcelXlsxFileStepImpl.class);
 
-    public static final int COLUMN_COUNT = 300;
+    RandomStringGenerator randomStringGenerator = new RandomStringGenerator();
 
     @Override
     public void execute(Model model) {
-        generateExcel("testfile.xlsx");
+        String outputFileName = model.getOutputFileName();
+        generateExcel(outputFileName, model.getRowCount(), model.getFieldDefinitionList());
+        model.getFieldDefinitionList().clear();
     }
 
-    private void generateExcel(String excelFilename) {
+    private void generateExcel(String excelFilename, long rowCount, List<FieldDefinition> fieldDefinitionList) {
 
         long startTime = new Date().getTime();
 
@@ -70,17 +73,16 @@ public class GenerateExcelXlsxFileStepImpl implements GenerateExcelXlsxFileStep 
             //New Sheet
             SXSSFSheet sheet1 = (SXSSFSheet) wb.createSheet("myData");
 
-            //Create Hash Map of Field Definitions
-            LinkedHashMap<Integer, MyTableInfo> hashMap = new LinkedHashMap<Integer, MyTableInfo>(COLUMN_COUNT);
+            int columnCount = fieldDefinitionList.size();
 
-            for (int i = 0; i < COLUMN_COUNT; i++) {
+            //Create Hash Map of Field Definitions
+            LinkedHashMap<Integer, MyTableInfo> hashMap = new LinkedHashMap<Integer, MyTableInfo>(columnCount);
+
+            for (int i = 0; i < columnCount; i++) {
                 MyTableInfo db2TableInfo = new MyTableInfo();
-                db2TableInfo.setFieldName("Column" + i);
-                db2TableInfo.setFieldText("test" + i);
-                db2TableInfo.setFieldSize(5);
-                db2TableInfo.setFieldDecimal(0);
-                db2TableInfo.setFieldType(1);
-//                db2TableInfo.setCellStyle(getCellAttributes(wb, cell, db2TableInfo));
+                FieldDefinition fieldDefinition = fieldDefinitionList.get(i);
+                db2TableInfo.setFieldText(fieldDefinition.getFieldName());
+                db2TableInfo.setFieldDefinition(fieldDefinition);
                 hashMap.put(i, db2TableInfo);
             }
 
@@ -90,7 +92,7 @@ public class GenerateExcelXlsxFileStepImpl implements GenerateExcelXlsxFileStep 
 
             // Generate column headings
             Row row = sheet1.createRow(idx);
-            MyTableInfo db2TableInfo = new MyTableInfo();
+            MyTableInfo db2TableInfo;
 
             Iterator<Integer> iterator = hashMap.keySet().iterator();
             while (iterator.hasNext()) {
@@ -99,39 +101,23 @@ public class GenerateExcelXlsxFileStepImpl implements GenerateExcelXlsxFileStep 
                 cell = row.createCell(idy);
                 cell.setCellValue(db2TableInfo.getFieldText());
                 cell.setCellStyle(cs);
-                if (db2TableInfo.getFieldSize() > db2TableInfo.getFieldText().trim().length()) {
-                    sheet1.setColumnWidth(idy, (db2TableInfo.getFieldSize() * 500));
-                } else {
-                    sheet1.setColumnWidth(idy, (db2TableInfo.getFieldText().trim().length() * 500));
-                }
+                sheet1.setColumnWidth(idy, (db2TableInfo.getFieldText().trim().length() * 500));
                 idy++;
             }
 
+            ThreadLocalRandom randomGenerator = ThreadLocalRandom.current();
 //            for (int i = 1; i < 1048575; i++) {  // max possible rows
-            for (int i = 1; i < 150000; i++) {
+//            for (int i = 1; i < 150000; i++) {
+            for (int i = 1; i < rowCount; i++) {
 
                 row = sheet1.createRow(i);
                 System.out.println("Processed " + i + " rows");
-                for (int colCount = 0; colCount < COLUMN_COUNT; colCount++) {
+                for (int colCount = 0; colCount < columnCount; colCount++) {
 
                     cell = row.createCell(colCount);
                     db2TableInfo = hashMap.get(colCount);
 
-                    switch (db2TableInfo.getFieldType()) {
-                        case 1:
-                            cell.setCellValue(UUID.randomUUID().toString());
-                            break;
-                        case 2:
-                            cell.setCellValue(UUID.randomUUID().toString());
-                            break;
-                        case 3:
-                            cell.setCellValue(UUID.randomUUID().toString());
-                            break;
-                        default:
-                            cell.setCellValue(UUID.randomUUID().toString());
-                            break;
-                    }
-                    cell.setCellStyle(db2TableInfo.getCellStyle());
+                    cell.setCellValue(generateFieldValue(db2TableInfo.getFieldDefinition(), i, randomGenerator));
                 }
 
             }
@@ -156,35 +142,33 @@ public class GenerateExcelXlsxFileStepImpl implements GenerateExcelXlsxFileStep 
 
     }
 
-    private static CellStyle getCellAttributes(Workbook wb, Cell c, MyTableInfo db2TableInfo) {
-
-        CellStyle cs = wb.createCellStyle();
-        DataFormat df = wb.createDataFormat();
-        Font f = wb.createFont();
-
-        switch (db2TableInfo.getFieldDecimal()) {
-            case 1:
-                cs.setDataFormat(df.getFormat("#,##0.0"));
-                break;
-            case 2:
-                cs.setDataFormat(df.getFormat("#,##0.00"));
-                break;
-            case 3:
-                cs.setDataFormat(df.getFormat("#,##0.000"));
-                break;
-            case 4:
-                cs.setDataFormat(df.getFormat("#,##0.0000"));
-                break;
-            case 5:
-                cs.setDataFormat(df.getFormat("#,##0.00000"));
-                break;
-            default:
-                break;
+    private String generateFieldValue(FieldDefinition fieldDefinition, int i, ThreadLocalRandom randomGenerator) {
+        String type = fieldDefinition.getType();
+        if ("String".equalsIgnoreCase(type)) {
+            String pattern = fieldDefinition.getPattern();
+            if (pattern != null) {
+                return String.format(pattern, i);
+            }
+            if (fieldDefinition.getLength() > 0) {
+                return randomStringGenerator.generateRandomString(fieldDefinition.getLength());
+            }
+            return randomStringGenerator.generateRandomString();
+        } else if ("Float".equalsIgnoreCase(type)) {
+            String pattern = fieldDefinition.getPattern();
+            if (pattern != null) {
+                return String.format(pattern, randomGenerator.nextDouble());
+            }
+            return new Double(randomGenerator.nextDouble()).toString();
+        } else if ("Integer".equalsIgnoreCase(type)) {
+            String pattern = fieldDefinition.getPattern();
+            if (pattern != null) {
+                return String.format(pattern, randomGenerator.nextInt());
+            }
+            return new Integer(randomGenerator.nextInt()).toString();
+        } else if ("Date".equalsIgnoreCase(type)) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(fieldDefinition.getPattern());
+            return simpleDateFormat.format(new Date());
         }
-
-        cs.setFont(f);
-
-        return cs;
-
+        return "";
     }
 }
