@@ -60,11 +60,12 @@ public class ReadInputParametersStepImpl implements ReadInputParametersStep {
 			long iterationCount = readIterationCount(sheet);
 			String lineSeparator = readLineSeparator(sheet);
             String outputFileName = readOutputFileName(sheet);
+			int sheetCount = readSheetCount(sheet);
 
 			System.out.println("Iterations: " + iterationCount + " lineSeparator" + lineSeparator);
-            List<Object[]> fields = new ArrayList<Object[]>(sheet.getLastRowNum()-3);
+            List<Object[]> fields = new ArrayList<Object[]>(sheet.getLastRowNum()-4);
 
-			for (int i = 4; i <= sheet.getLastRowNum(); i++) {
+			for (int i = 5; i <= sheet.getLastRowNum(); i++) {
 
 				XSSFRow row = sheet.getRow(i);
                 Object[] fieldDefinition = new Object[row.getLastCellNum()];
@@ -81,7 +82,6 @@ public class ReadInputParametersStepImpl implements ReadInputParametersStep {
 					fieldDefinition[y] = cell.toString();
 				}
                 fields.add(fieldDefinition);
-				System.out.println("");
 			}
 
 			file.close();
@@ -107,6 +107,7 @@ public class ReadInputParametersStepImpl implements ReadInputParametersStep {
             model.setRowCount(iterationCount);
             model.setLineSeparator(lineSeparator);
             model.setOutputFileName(outputFileName);
+			model.setSheetCount(sheetCount);
 
             System.out.println("");
             
@@ -119,7 +120,13 @@ public class ReadInputParametersStepImpl implements ReadInputParametersStep {
 		}
 	}
 
-    private String readOutputFileName(XSSFSheet sheet) {
+	private int readSheetCount(XSSFSheet sheet) {
+		XSSFRow row = sheet.getRow(3);
+		Cell cell = row.getCell(1);
+		return (int) cell.getNumericCellValue();
+	}
+
+	private String readOutputFileName(XSSFSheet sheet) {
         XSSFRow row = sheet.getRow(2);
         Cell cell = row.getCell(1);
         return cell.getStringCellValue();

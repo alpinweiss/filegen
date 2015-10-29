@@ -19,7 +19,7 @@ import eu.alpinweiss.filegen.command.steps.GenerateExcelXlsxFileStep;
 import eu.alpinweiss.filegen.model.FieldDefinition;
 import eu.alpinweiss.filegen.model.Model;
 import eu.alpinweiss.filegen.util.MyTableInfo;
-import eu.alpinweiss.filegen.util.RandomStringGenerator;
+import eu.alpinweiss.filegen.util.SheetProcessor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.*;
@@ -29,9 +29,10 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * {@link GenerateExcelXlsxFileStepImpl}.
@@ -42,16 +43,14 @@ public class GenerateExcelXlsxFileStepImpl implements GenerateExcelXlsxFileStep 
 
     private final static Logger LOGGER = LogManager.getLogger(GenerateExcelXlsxFileStepImpl.class);
 
-    RandomStringGenerator randomStringGenerator = new RandomStringGenerator();
-
     @Override
     public void execute(Model model) {
         String outputFileName = model.getOutputFileName();
-        generateExcel(outputFileName, model.getRowCount(), model.getFieldDefinitionList());
+        generateExcel(outputFileName, model.getRowCount(), model.getFieldDefinitionList(), model.getSheetCount());
         model.getFieldDefinitionList().clear();
     }
 
-    private void generateExcel(String excelFilename, long rowCount, List<FieldDefinition> fieldDefinitionList) {
+    private void generateExcel(String excelFilename, long rowCount, List<FieldDefinition> fieldDefinitionList, int sheetCount) {
 
         long startTime = new Date().getTime();
 
@@ -89,43 +88,29 @@ public class GenerateExcelXlsxFileStepImpl implements GenerateExcelXlsxFileStep 
                 hashMap.put(i, db2TableInfo);
             }
 
-            // Row and column indexes
-            int idx = 0;
-            int idy = 0;
+	        if (sheetCount > 1) {
+		        CountDownLatch startSignal = new CountDownLatch(1);
+		        CountDownLatch doneSignal;
 
-            // Generate column headings
-            Row row = sheet1.createRow(idx);
-            MyTableInfo db2TableInfo;
+		        doneSignal = new CountDownLatch(sheetCount);
 
-            Iterator<Integer> iterator = hashMap.keySet().iterator();
-            while (iterator.hasNext()) {
-                Integer key = iterator.next();
-                db2TableInfo = hashMap.get(key);
-                cell = row.createCell(idy);
-                cell.setCellValue(db2TableInfo.getFieldText());
-                cell.setCellStyle(cs);
-                sheet1.setColumnWidth(idy, (db2TableInfo.getFieldText().trim().length() * 500));
-                idy++;
-            }
+		        SheetProcessor stringProcessorSheet1 = new SheetProcessor(rowCount, startSignal, doneSignal, cs, sheet1, columnCount, hashMap);
+		        new Thread(stringProcessorSheet1, "Processor-" + sheetCount).start();
 
-            ThreadLocalRandom randomGenerator = ThreadLocalRandom.current();
-//            for (int i = 1; i < 1048575; i++) {  // max possible rows
-//            for (int i = 1; i < 150000; i++) {
-            for (int i = 1; i < rowCount; i++) {
+		        for (int i = 0; i < sheetCount-1; i++) {
+			        SXSSFSheet sheet = (SXSSFSheet) wb.createSheet("myData_" + i);
+			        SheetProcessor stringProcessor = new SheetProcessor(rowCount, startSignal, doneSignal, cs, sheet, columnCount, hashMap);
+			        new Thread(stringProcessor, "Processor-" + i).start();
+		        }
 
-                row = sheet1.createRow(i);
-                System.out.println("Processed " + i + " rows");
-                for (int colCount = 0; colCount < columnCount; colCount++) {
+		        startSignal.countDown();
+		        doneSignal.await();
+	        } else {
+		        new SheetProcessor().generateSheetData(rowCount, cs, sheet1, columnCount, hashMap);
+	        }
 
-                    cell = row.createCell(colCount);
-                    db2TableInfo = hashMap.get(colCount);
 
-                    db2TableInfo.generator().generate(i, randomGenerator, cell);
-                }
-
-            }
-
-            System.out.println("Excel data generation finished.");
+	        System.out.println("Excel data generation finished.");
             long generationTime = new Date().getTime();
             System.out.println("Time used " + ((generationTime - startTime) / 1000) + " sec");
             System.out.println("Writing to file.");

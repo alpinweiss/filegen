@@ -47,41 +47,43 @@ public class DateRangeGenerator implements FieldGenerator {
 
 	@Override
 	public void generate(int iterationNo, ThreadLocalRandom randomGenerator, Cell cell) {
-		String pattern = fieldDefinition.getPattern();
-		if (pattern == null || "".equals(pattern)) {
-			cell.setCellValue("");
-			return;
-		}
-
-		String[] split = pattern.split(":");
-		if (split.length == 1) {
-			cell.setCellValue(pattern);
-			return;
-		}
-		try {
-			String dateFormatPattern = split[0];
-			dateFormat = new SimpleDateFormat(dateFormatPattern);
-			Date min = dateFormat.parse(split[1]);
-			Date max = dateFormat.parse(split[2]);
-
-			List<Date> dates = new ArrayList<>();
-
-			Calendar c = Calendar.getInstance();
-			int counter = 1;
-			while(true) {
-				c.setTime(min);
-				c.add(Calendar.DATE, counter++);
-				Date date = c.getTime();
-				dates.add(date);
-				if (date.equals(max)) {
-					break;
-				}
+		synchronized (this) {
+			String pattern = fieldDefinition.getPattern();
+			if (pattern == null || "".equals(pattern)) {
+				cell.setCellValue("");
+				return;
 			}
 
-			int index = ThreadLocalRandom.current().nextInt(0, dates.size());
-			cell.setCellValue(dateFormat.format(dates.get(index)));
-		} catch (ParseException e) {
-			LOGGER.error(e.getMessage(), e);
+			String[] split = pattern.split(":");
+			if (split.length == 1) {
+				cell.setCellValue(pattern);
+				return;
+			}
+			try {
+				String dateFormatPattern = split[0];
+				dateFormat = new SimpleDateFormat(dateFormatPattern);
+				Date min = dateFormat.parse(split[1]);
+				Date max = dateFormat.parse(split[2]);
+
+				List<Date> dates = new ArrayList<>();
+
+				Calendar c = Calendar.getInstance();
+				int counter = 1;
+				while (true) {
+					c.setTime(min);
+					c.add(Calendar.DATE, counter++);
+					Date date = c.getTime();
+					dates.add(date);
+					if (date.equals(max)) {
+						break;
+					}
+				}
+
+				int index = ThreadLocalRandom.current().nextInt(0, dates.size());
+				cell.setCellValue(dateFormat.format(dates.get(index)));
+			} catch (ParseException e) {
+				LOGGER.error(e.getMessage(), e);
+			}
 		}
 	}
 }

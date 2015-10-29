@@ -38,24 +38,26 @@ public class NumberRangeGenerator implements FieldGenerator {
 
 	@Override
 	public void generate(int iterationNo, ThreadLocalRandom randomGenerator, Cell cell) {
-		String pattern = fieldDefinition.getPattern();
-		if (pattern == null || "".equals(pattern)) {
-			cell.setCellValue("");
-			return;
-		}
+		synchronized (this) {
+			String pattern = fieldDefinition.getPattern();
+			if (pattern == null || "".equals(pattern)) {
+				cell.setCellValue("");
+				return;
+			}
 
-		String[] split = pattern.split(":");
-		if (split.length == 1) {
-			cell.setCellValue(pattern);
-			return;
+			String[] split = pattern.split(":");
+			if (split.length == 1) {
+				cell.setCellValue(pattern);
+				return;
+			}
+			int min = Integer.parseInt(split[0]);
+			int max = Integer.parseInt(split[1]);
+			List<Integer> integers = new ArrayList<>();
+			for (int i = min; i < max; i++) {
+				integers.add(i);
+			}
+			int index = ThreadLocalRandom.current().nextInt(0, integers.size());
+			cell.setCellValue(integers.get(index));
 		}
-		int min = Integer.parseInt(split[0]);
-		int max = Integer.parseInt(split[1]);
-		List<Integer> integers = new ArrayList<>();
-		for (int i = min; i < max; i++) {
-			integers.add(i);
-		}
-		int index = ThreadLocalRandom.current().nextInt(0, integers.size());
-		cell.setCellValue(integers.get(index));
 	}
 }
