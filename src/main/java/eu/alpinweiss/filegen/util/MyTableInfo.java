@@ -68,6 +68,11 @@ public class MyTableInfo {
 				case DATE:
 					this.fieldGenerator = new DateGenerator(fieldDefinition);
 					break;
+				case RANGE:
+					this.fieldGenerator = new RangeGenerator(fieldDefinition);
+					break;
+				case NUMBERRANGE:
+					this.fieldGenerator = new NumberRangeGenerator(fieldDefinition);
 			}
 		} else {
 			this.fieldGenerator = new PassThroughGenerator(fieldDefinition);
