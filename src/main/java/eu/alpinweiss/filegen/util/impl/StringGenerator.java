@@ -30,7 +30,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class StringGenerator implements FieldGenerator {
 
 	private final FieldDefinition fieldDefinition;
-	private final Generex generex;
+	private Generex generex;
 
 	public StringGenerator(FieldDefinition fieldDefinition) {
 		this.fieldDefinition = fieldDefinition;
@@ -39,6 +39,8 @@ public class StringGenerator implements FieldGenerator {
 
 	@Override
 	public void generate(int iterationNo, ThreadLocalRandom randomGenerator, Cell cell) {
-		cell.setCellValue(generex.random());
+		synchronized (this) {
+			cell.setCellValue(generex.random());
+		}
 	}
 }
