@@ -73,6 +73,10 @@ public class MyTableInfo {
 					break;
 				case NUMBERRANGE:
 					this.fieldGenerator = new NumberRangeGenerator(fieldDefinition);
+					break;
+				case DATERANGE:
+					this.fieldGenerator = new DateRangeGenerator(fieldDefinition);
+					break;
 			}
 		} else {
 			this.fieldGenerator = new PassThroughGenerator(fieldDefinition);

@@ -56,7 +56,7 @@ public class StringProcessor implements Runnable {
             startSignal.await();
 
             ThreadLocalRandom randomGenerator = ThreadLocalRandom.current();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
             System.out.println(Thread.currentThread().getName() + " starts generating " + iterationCount + " rows");
 

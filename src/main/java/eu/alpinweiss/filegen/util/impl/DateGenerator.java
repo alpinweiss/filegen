@@ -40,7 +40,7 @@ public class DateGenerator implements FieldGenerator {
 	public void generate(int iterationNo, ThreadLocalRandom randomGenerator, Cell cell) {
 		String pattern = fieldDefinition.getPattern();
 		if (pattern == null || "".equals(pattern)) {
-			pattern = "mm/DD/YYYY";
+			pattern = "mm/DD/yyyy";
 		}
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 		cell.setCellValue(simpleDateFormat.format(new Date()));
