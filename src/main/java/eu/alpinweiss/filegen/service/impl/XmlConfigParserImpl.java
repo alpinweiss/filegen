@@ -3,6 +3,8 @@ package eu.alpinweiss.filegen.service.impl;
 import com.google.inject.Singleton;
 import eu.alpinweiss.filegen.config.FdrStep;
 import eu.alpinweiss.filegen.service.XmlConfigParser;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.CharacterData;
 import org.w3c.dom.*;
 
@@ -20,6 +22,8 @@ import java.util.Set;
  */
 @Singleton
 public class XmlConfigParserImpl implements XmlConfigParser {
+
+	private final static Logger LOGGER = LogManager.getLogger(XmlConfigParserImpl.class);
 
 	public static final String REQUIRED = "required";
 	public static final String DESCRIPTION = "description";
@@ -82,7 +86,7 @@ public class XmlConfigParserImpl implements XmlConfigParser {
                 fdrStepSet.add(step);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+	        LOGGER.error(e.getMessage(), e);
 		}
 
 		return fdrStepSet;

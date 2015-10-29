@@ -25,6 +25,8 @@ import eu.alpinweiss.filegen.config.FdrOptionHolder;
 import eu.alpinweiss.filegen.model.Model;
 import eu.alpinweiss.filegen.service.FdrService;
 import org.apache.commons.cli.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 
@@ -35,6 +37,8 @@ import java.util.Map;
  */
 @Singleton
 public class FdrServiceImpl implements FdrService {
+
+	private final static Logger LOGGER = LogManager.getLogger(FdrServiceImpl.class);
 
 	@Inject
 	private CommandRunner commandRunner;
@@ -67,7 +71,7 @@ public class FdrServiceImpl implements FdrService {
                 model.addCommand(injector.getInstance(commandSteps.get(cmdOption.getOpt())));
             }
 		} catch (ParseException e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		}
 
 		commandRunner.run(model);

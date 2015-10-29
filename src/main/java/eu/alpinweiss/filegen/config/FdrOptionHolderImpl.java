@@ -21,6 +21,8 @@ import eu.alpinweiss.filegen.command.CommandStep;
 import eu.alpinweiss.filegen.service.XmlConfigParser;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -36,6 +38,8 @@ public class FdrOptionHolderImpl implements FdrOptionHolder {
 
 	private final Map<String, Class<? extends CommandStep>> commandSteps = new LinkedHashMap<String, Class<? extends CommandStep>>();
 	private final Options options = new Options();
+
+	private final static Logger LOGGER = LogManager.getLogger(FdrOptionHolderImpl.class);
 
 	@Inject
 	public FdrOptionHolderImpl(XmlConfigParser xmlConfigParser) {
@@ -61,7 +65,7 @@ public class FdrOptionHolderImpl implements FdrOptionHolder {
 		try {
 			return (Class<CommandStep>) Class.forName(fdrStep.getClassName());
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		}
 		return null;
 	}

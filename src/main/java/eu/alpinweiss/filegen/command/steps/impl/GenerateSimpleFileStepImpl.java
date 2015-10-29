@@ -58,7 +58,7 @@ public class GenerateSimpleFileStepImpl implements GenerateSimpleFileStep {
             System.out.println("Done");
             System.out.println("Time used " + ((new Date().getTime() - startTime) / 1000) + " sec");
         } catch (IOException iox) {
-            LOGGER.error(iox.getMessage());
+            LOGGER.error(iox.getMessage(), iox);
         }
 
     }

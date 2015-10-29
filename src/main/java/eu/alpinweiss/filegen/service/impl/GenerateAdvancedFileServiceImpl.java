@@ -67,7 +67,7 @@ public class GenerateAdvancedFileServiceImpl implements GenerateAdvancedFileServ
 
             fw.close();
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error(e.getMessage(), e);
         }
 
         System.out.println("Done");

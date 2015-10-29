@@ -81,9 +81,9 @@ public class StringProcessor implements Runnable {
             }
             doneSignal.countDown();
         } catch (InterruptedException e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error(e.getMessage(), e);
         } catch (IOException e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
