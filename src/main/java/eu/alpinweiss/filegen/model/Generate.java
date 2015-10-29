@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.alpinweiss.filegen.command.steps;
-
-import eu.alpinweiss.filegen.command.CommandStep;
+package eu.alpinweiss.filegen.model;
 
 /**
- * {@link ReadInputParametersStep}.
+ * {@link Generate}.
  *
  * @author Aleksandrs.Severgins | <a href="http://alpinweiss.eu">SIA Alpinweiss</a>
+ *
  */
-public interface ReadInputParametersStep extends CommandStep {
-
-	String INPUT_PARAMETER = "i";
-
+public enum Generate {
+	Y, N
 }

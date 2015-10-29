@@ -43,6 +43,7 @@ public class FdrOptionHolderImpl implements FdrOptionHolder {
 		initOptions(fdrSteps);
 	}
 
+	@SuppressWarnings("static-access")
 	private void initOptions(Set<FdrStep> fdrSteps) {
 		for (FdrStep fdrStep : fdrSteps) {
             options.addOption(OptionBuilder.hasArgs(1).hasOptionalArgs(1)

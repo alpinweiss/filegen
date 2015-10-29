@@ -16,25 +16,26 @@
 
 package eu.alpinweiss.filegen.command.steps.impl;
 
-import eu.alpinweiss.filegen.command.steps.ReadInputParametersStep;
-import eu.alpinweiss.filegen.model.FieldDefinition;
-import eu.alpinweiss.filegen.model.Model;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+
+import eu.alpinweiss.filegen.model.FieldType;
+import eu.alpinweiss.filegen.model.Generate;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import eu.alpinweiss.filegen.command.steps.ReadInputParametersStep;
+import eu.alpinweiss.filegen.model.FieldDefinition;
+import eu.alpinweiss.filegen.model.Model;
 
 /**
  * {@link ReadInputParametersStepImpl}.
@@ -76,24 +77,8 @@ public class ReadInputParametersStepImpl implements ReadInputParametersStep {
 						break;
 					}
 
-					switch(cell.getCellType()) {
-						case Cell.CELL_TYPE_BLANK:
-                            System.out.print("\t\t");
-                            fieldDefinition[y] = null;
-                            break;
-						case Cell.CELL_TYPE_BOOLEAN:
-							System.out.print(cell.getBooleanCellValue() + "\t\t");
-                            fieldDefinition[y] = cell.getBooleanCellValue();
-							break;
-						case Cell.CELL_TYPE_NUMERIC:
-							System.out.print(cell.getNumericCellValue() + "\t\t");
-                            fieldDefinition[y] = cell.getNumericCellValue();
-							break;
-						case Cell.CELL_TYPE_STRING:
-							System.out.print(cell.getStringCellValue() + "\t\t");
-                            fieldDefinition[y] = cell.getStringCellValue();
-							break;
-					}
+					cell.setCellType(Cell.CELL_TYPE_STRING);
+					fieldDefinition[y] = cell.toString();
 				}
                 fields.add(fieldDefinition);
 				System.out.println("");
@@ -105,13 +90,16 @@ public class ReadInputParametersStepImpl implements ReadInputParametersStep {
                 FieldDefinition fieldDefinition = new FieldDefinition();
                 String name = getStringName(field[0]);
                 fieldDefinition.setFieldName(name);
-                fieldDefinition.setType((String) field[1]);
-                Double fieldLength = (Double) field[2];
-                fieldDefinition.setLength(fieldLength != null ? fieldLength.intValue() : 0);
-                if (field[3] != null && field[3] instanceof Number) {
-                    fieldDefinition.setPattern(field[3].toString());
-                } else {
-                    fieldDefinition.setPattern((String) field[3]);
+	            String fieldType = (String) field[1];
+	            fieldDefinition.setType(fieldType != null ? FieldType.valueOf(fieldType.toUpperCase()) : FieldType.STRING);
+                String fieldNeedToGenerate = (String) field[2];
+                fieldDefinition.setGenerate(fieldNeedToGenerate != null ? Generate.valueOf(fieldNeedToGenerate.toUpperCase()) : Generate.N);
+                if ((field.length > 3)) {
+	                if (field[3] != null && field[3] instanceof Number) {
+		                fieldDefinition.setPattern(field[3].toString());
+	                } else {
+		                fieldDefinition.setPattern((String) field[3]);
+	                }
                 }
                 model.getFieldDefinitionList().add(fieldDefinition);
             }
@@ -121,6 +109,8 @@ public class ReadInputParametersStepImpl implements ReadInputParametersStep {
             model.setOutputFileName(outputFileName);
 
             System.out.println("");
+            
+            workbook.close();
 
 		} catch (FileNotFoundException e) {
 			LOGGER.error("Can't read input parameters file", e);

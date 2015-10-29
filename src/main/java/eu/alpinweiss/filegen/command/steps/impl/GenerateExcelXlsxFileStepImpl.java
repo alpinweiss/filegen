@@ -28,6 +28,7 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -56,9 +57,10 @@ public class GenerateExcelXlsxFileStepImpl implements GenerateExcelXlsxFileStep 
 
         System.out.println("Excel data generation started");
 
+        //New Workbook
+        Workbook wb = new SXSSFWorkbook();
+        
         try {
-            //New Workbook
-            Workbook wb = new SXSSFWorkbook();
             Cell cell;
 
             //Cell style for header row
@@ -83,6 +85,7 @@ public class GenerateExcelXlsxFileStepImpl implements GenerateExcelXlsxFileStep 
                 FieldDefinition fieldDefinition = fieldDefinitionList.get(i);
                 db2TableInfo.setFieldText(fieldDefinition.getFieldName());
                 db2TableInfo.setFieldDefinition(fieldDefinition);
+	            db2TableInfo.initGenerator();
                 hashMap.put(i, db2TableInfo);
             }
 
@@ -117,7 +120,7 @@ public class GenerateExcelXlsxFileStepImpl implements GenerateExcelXlsxFileStep 
                     cell = row.createCell(colCount);
                     db2TableInfo = hashMap.get(colCount);
 
-                    cell.setCellValue(generateFieldValue(db2TableInfo.getFieldDefinition(), i, randomGenerator));
+                    db2TableInfo.generator().generate(i, randomGenerator, cell);
                 }
 
             }
@@ -137,42 +140,14 @@ public class GenerateExcelXlsxFileStepImpl implements GenerateExcelXlsxFileStep 
             System.out.println("Total time used " + ((writeTime - startTime) / 1000) + " sec");
             System.out.println("Done");
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error(e.getMessage(), e);
+        } finally {
+        	try {
+				wb.close();
+			} catch (IOException e) {
+				LOGGER.error(e.getMessage(), e);
+			}
         }
 
-    }
-
-    private String generateFieldValue(FieldDefinition fieldDefinition, int i, ThreadLocalRandom randomGenerator) {
-        String type = fieldDefinition.getType();
-        if ("String".equalsIgnoreCase(type)) {
-            String pattern = fieldDefinition.getPattern();
-            if (pattern != null) {
-                return String.format(pattern, i);
-            }
-            if (fieldDefinition.getLength() > 0) {
-                return randomStringGenerator.generateRandomString(fieldDefinition.getLength());
-            }
-            return randomStringGenerator.generateRandomString();
-        } else if ("Float".equalsIgnoreCase(type)) {
-            String pattern = fieldDefinition.getPattern();
-            if (pattern != null) {
-                return String.format(pattern, randomGenerator.nextDouble());
-            }
-            return new Double(randomGenerator.nextDouble()).toString();
-        } else if ("Integer".equalsIgnoreCase(type)) {
-            String pattern = fieldDefinition.getPattern();
-            if (pattern != null) {
-                return String.format(pattern, randomGenerator.nextInt(Integer.MAX_VALUE));
-            }
-            return new Integer(randomGenerator.nextInt()).toString();
-        } else if ("Date".equalsIgnoreCase(type)) {
-            String pattern = fieldDefinition.getPattern();
-            if (pattern == null || "".equals(pattern)) {
-                pattern = "mm/DD/YYYY";
-            }
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-            return simpleDateFormat.format(new Date());
-        }
-        return "";
     }
 }

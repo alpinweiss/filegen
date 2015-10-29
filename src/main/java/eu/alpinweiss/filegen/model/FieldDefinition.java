@@ -23,16 +23,16 @@ package eu.alpinweiss.filegen.model;
  */
 public class FieldDefinition {
 
-    private String type;
+    private FieldType type;
     private String fieldName;
-    private int length;
+    private Generate generate;
     private String pattern;
 
-    public String getType() {
+    public FieldType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(FieldType type) {
         this.type = type;
     }
 
@@ -44,12 +44,12 @@ public class FieldDefinition {
         this.fieldName = fieldName;
     }
 
-    public int getLength() {
-        return length;
+    public Generate getGenerate() {
+        return generate;
     }
 
-    public void setLength(int length) {
-        this.length = length;
+    public void setGenerate(Generate generate) {
+        this.generate = generate;
     }
 
     public String getPattern() {

@@ -16,6 +16,9 @@
 package eu.alpinweiss.filegen.util;
 
 import eu.alpinweiss.filegen.model.FieldDefinition;
+import eu.alpinweiss.filegen.model.FieldType;
+import eu.alpinweiss.filegen.model.Generate;
+import eu.alpinweiss.filegen.util.impl.*;
 
 /**
  * {@link MyTableInfo}.
@@ -26,6 +29,7 @@ public class MyTableInfo {
 
     String fieldText = null;
     FieldDefinition fieldDefinition;
+	FieldGenerator fieldGenerator;
 
     public String getFieldText() {
         return fieldText;
@@ -42,4 +46,31 @@ public class MyTableInfo {
     public void setFieldDefinition(FieldDefinition fieldDefinition) {
         this.fieldDefinition = fieldDefinition;
     }
+
+	public FieldGenerator generator() {
+		return fieldGenerator;
+	}
+
+	public void initGenerator() {
+		Generate generate = fieldDefinition.getGenerate();
+		if (Generate.Y.equals(generate)) {
+			FieldType type = fieldDefinition.getType();
+			switch (type) {
+				case FLOAT:
+					this.fieldGenerator = new FloatGenerator(fieldDefinition);
+					break;
+				case STRING:
+					this.fieldGenerator = new StringGenerator(fieldDefinition);
+					break;
+				case INTEGER:
+					this.fieldGenerator = new IntegerGenerator(fieldDefinition);
+					break;
+				case DATE:
+					this.fieldGenerator = new DateGenerator(fieldDefinition);
+					break;
+			}
+		} else {
+			this.fieldGenerator = new PassThroughGenerator(fieldDefinition);
+		}
+	}
 }

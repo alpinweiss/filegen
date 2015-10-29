@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.alpinweiss.filegen.command.steps;
+package eu.alpinweiss.filegen.util;
 
-import eu.alpinweiss.filegen.command.CommandStep;
+import org.apache.poi.ss.usermodel.Cell;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * {@link ReadInputParametersStep}.
+ * {@link FieldGenerator}.
  *
  * @author Aleksandrs.Severgins | <a href="http://alpinweiss.eu">SIA Alpinweiss</a>
  */
-public interface ReadInputParametersStep extends CommandStep {
+public interface FieldGenerator {
 
-	String INPUT_PARAMETER = "i";
+	void generate(int iterationNo, ThreadLocalRandom randomGenerator, Cell cell);
 
 }
