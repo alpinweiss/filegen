@@ -19,8 +19,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -36,19 +36,23 @@ public class StringProcessor implements Runnable {
 
     private final static Logger LOGGER = LogManager.getLogger(StringProcessor.class);
 
-    private long iterationCount;
+    private long rowCount;
 
     private final List<String> stringList = new ArrayList<String>();
     private final CountDownLatch startSignal;
     private final CountDownLatch doneSignal;
     private final FileWriter fw;
+	private int columnCount;
+	private Map<Integer, Input2TableInfo> input2TableInfoMap;
 
-    public StringProcessor(long iterationCount, CountDownLatch startSignal, CountDownLatch doneSignal, FileWriter fw) {
-        this.iterationCount = iterationCount;
+	public StringProcessor(long rowCount, CountDownLatch startSignal, CountDownLatch doneSignal, FileWriter fw, int columnCount, Map<Integer, Input2TableInfo> input2TableInfoMap) {
+        this.rowCount = rowCount;
         this.startSignal = startSignal;
         this.doneSignal = doneSignal;
         this.fw = fw;
-    }
+		this.columnCount = columnCount;
+		this.input2TableInfoMap = input2TableInfoMap;
+	}
 
     @Override
     public void run() {
@@ -58,9 +62,9 @@ public class StringProcessor implements Runnable {
             ThreadLocalRandom randomGenerator = ThreadLocalRandom.current();
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-            System.out.println(Thread.currentThread().getName() + " starts generating " + iterationCount + " rows");
+            System.out.println(Thread.currentThread().getName() + " starts generating " + rowCount + " rows");
 
-            for (long i = 0; i < iterationCount; i++) {
+            for (long i = 0; i < rowCount; i++) {
                 if (i != 0 && i % 10000 == 0) {
                     synchronized (fw) {
                         System.out.println(Thread.currentThread().getName() + " writes next " + i + " rows");
@@ -70,8 +74,22 @@ public class StringProcessor implements Runnable {
                     }
                     stringList.clear();
                 }
-                String str = String.format("%s %.5f %05d %.5f %03d %s\r\n", Long.toHexString(Double.doubleToLongBits(randomGenerator.nextDouble())), randomGenerator.nextDouble(), randomGenerator.nextInt(9999), randomGenerator.nextDouble(), randomGenerator.nextInt(999), simpleDateFormat.format(new Date()));
-                stringList.add(str);
+
+	            Input2TableInfo input2TableInfo;
+	            final StringBuilder builder = new StringBuilder();
+	            for (int colCount = 0; colCount < columnCount; colCount++) {
+		            input2TableInfo = input2TableInfoMap.get(colCount);
+
+		            input2TableInfo.generator().generate((int)i, randomGenerator, new ValueVault() {
+			            @Override
+			            public void storeValue(String value) {
+				            builder.append(value).append(" ");
+			            }
+		            });
+	            }
+
+	            builder.append("\r\n");
+                stringList.add(builder.toString());
             }
             synchronized (fw) {
                 System.out.println(Thread.currentThread().getName() + " writes last " + stringList.size() + " rows");
@@ -88,6 +106,6 @@ public class StringProcessor implements Runnable {
     }
 
     public void addIterationCount(long iterationCount) {
-        this.iterationCount += iterationCount;
+        this.rowCount += iterationCount;
     }
 }

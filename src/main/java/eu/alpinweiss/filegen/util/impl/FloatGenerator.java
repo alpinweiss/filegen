@@ -17,7 +17,7 @@ package eu.alpinweiss.filegen.util.impl;
 
 import eu.alpinweiss.filegen.model.FieldDefinition;
 import eu.alpinweiss.filegen.util.FieldGenerator;
-import org.apache.poi.ss.usermodel.Cell;
+import eu.alpinweiss.filegen.util.ValueVault;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -35,11 +35,11 @@ public class FloatGenerator implements FieldGenerator {
 	}
 
 	@Override
-	public void generate(int iterationNo, ThreadLocalRandom randomGenerator, Cell cell) {
+	public void generate(int iterationNo, ThreadLocalRandom randomGenerator, ValueVault valueVault) {
 		String pattern = fieldDefinition.getPattern();
 		if (pattern != null) {
-			cell.setCellValue(String.format(pattern, randomGenerator.nextDouble()));
+			valueVault.storeValue(String.format(pattern, randomGenerator.nextDouble()));
 		}
-		cell.setCellValue(new Double(randomGenerator.nextDouble()).toString());
+		valueVault.storeValue(new Double(randomGenerator.nextDouble()).toString());
 	}
 }

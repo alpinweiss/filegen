@@ -32,16 +32,8 @@ public class GenerateAdvancedFileStepImpl implements GenerateAdvancedFileStep {
 
     @Override
     public void execute(Model model) {
-
-        long iterations = getIterations(model.getParameter(ADVANCED_FILE));
-        generateAdvancedFileService.generateFile(model, iterations);
-
-    }
-
-    private long getIterations(String arg) {
-        if (arg!= null) {
-            return Long.parseLong(arg);
-        }
-        return 250000;
+	    String outputFileName = model.getOutputFileName();
+	    generateAdvancedFileService.generateFile(outputFileName, model.getRowCount(), model.getFieldDefinitionList());
+	    model.getFieldDefinitionList().clear();
     }
 }

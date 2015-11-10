@@ -15,8 +15,6 @@
  */
 package eu.alpinweiss.filegen.util;
 
-import org.apache.poi.ss.usermodel.Cell;
-
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -26,6 +24,6 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public interface FieldGenerator {
 
-	void generate(int iterationNo, ThreadLocalRandom randomGenerator, Cell cell);
+	void generate(int iterationNo, ThreadLocalRandom randomGenerator, ValueVault valueVault);
 
 }

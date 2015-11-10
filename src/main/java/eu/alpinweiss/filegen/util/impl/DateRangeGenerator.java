@@ -17,9 +17,9 @@ package eu.alpinweiss.filegen.util.impl;
 
 import eu.alpinweiss.filegen.model.FieldDefinition;
 import eu.alpinweiss.filegen.util.FieldGenerator;
+import eu.alpinweiss.filegen.util.ValueVault;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.poi.ss.usermodel.Cell;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,6 +36,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class DateRangeGenerator implements FieldGenerator {
 
+	public static final String EMPTY = "";
 	private final FieldDefinition fieldDefinition;
 	private SimpleDateFormat dateFormat;
 
@@ -46,17 +47,17 @@ public class DateRangeGenerator implements FieldGenerator {
 	}
 
 	@Override
-	public void generate(int iterationNo, ThreadLocalRandom randomGenerator, Cell cell) {
+	public void generate(int iterationNo, ThreadLocalRandom randomGenerator, ValueVault valueVault) {
 		synchronized (this) {
 			String pattern = fieldDefinition.getPattern();
-			if (pattern == null || "".equals(pattern)) {
-				cell.setCellValue("");
+			if (pattern == null || EMPTY.equals(pattern)) {
+				valueVault.storeValue(EMPTY);
 				return;
 			}
 
 			String[] split = pattern.split(":");
 			if (split.length == 1) {
-				cell.setCellValue(pattern);
+				valueVault.storeValue(pattern);
 				return;
 			}
 			try {
@@ -80,7 +81,7 @@ public class DateRangeGenerator implements FieldGenerator {
 				}
 
 				int index = ThreadLocalRandom.current().nextInt(0, dates.size());
-				cell.setCellValue(dateFormat.format(dates.get(index)));
+				valueVault.storeValue(dateFormat.format(dates.get(index)));
 			} catch (ParseException e) {
 				LOGGER.error(e.getMessage(), e);
 			}

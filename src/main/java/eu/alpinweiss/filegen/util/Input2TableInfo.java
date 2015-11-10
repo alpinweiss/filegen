@@ -21,11 +21,11 @@ import eu.alpinweiss.filegen.model.Generate;
 import eu.alpinweiss.filegen.util.impl.*;
 
 /**
- * {@link MyTableInfo}.
+ * {@link Input2TableInfo}.
  *
  * @author Aleksandrs.Severgins | <a href="http://alpinweiss.eu">SIA Alpinweiss</a>
  */
-public class MyTableInfo {
+public class Input2TableInfo {
 
     String fieldText = null;
     FieldDefinition fieldDefinition;

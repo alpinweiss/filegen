@@ -16,8 +16,9 @@
 package eu.alpinweiss.filegen.service.impl;
 
 import com.google.inject.Singleton;
-import eu.alpinweiss.filegen.model.Model;
+import eu.alpinweiss.filegen.model.FieldDefinition;
 import eu.alpinweiss.filegen.service.GenerateAdvancedFileService;
+import eu.alpinweiss.filegen.util.Input2TableInfo;
 import eu.alpinweiss.filegen.util.StringProcessor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,6 +26,8 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -39,7 +42,7 @@ public class GenerateAdvancedFileServiceImpl implements GenerateAdvancedFileServ
     public static final int THREAD_COUNT = 10;
 
     @Override
-    public void generateFile(Model model, long iterations) {
+    public void generateFile(String filename, long rowCount, List<FieldDefinition> fieldDefinitionList) {
 
         long startTime = new Date().getTime();
 
@@ -47,15 +50,30 @@ public class GenerateAdvancedFileServiceImpl implements GenerateAdvancedFileServ
         CountDownLatch doneSignal;
 
         try {
-            File newTextFile = new File("thetextfile.txt");
+            File newTextFile = new File(filename);
             FileWriter fw = new FileWriter(newTextFile);
 
             doneSignal = new CountDownLatch(THREAD_COUNT);
-            long iterationCount = iterations / THREAD_COUNT;
-            long iterationMod = iterations % THREAD_COUNT;
+            long iterationCount = rowCount / THREAD_COUNT;
+            long iterationMod = rowCount % THREAD_COUNT;
+
+	        int columnCount = fieldDefinitionList.size();
+
+	        //Create Hash Map of Field Definitions
+	        LinkedHashMap<Integer, Input2TableInfo> tableInfoHashMap = new LinkedHashMap<>(columnCount);
+
+	        for (int i = 0; i < columnCount; i++) {
+		        Input2TableInfo input2TableInfo = new Input2TableInfo();
+		        FieldDefinition fieldDefinition = fieldDefinitionList.get(i);
+		        input2TableInfo.setFieldText(fieldDefinition.getFieldName());
+		        input2TableInfo.setFieldDefinition(fieldDefinition);
+		        input2TableInfo.initGenerator();
+		        tableInfoHashMap.put(i, input2TableInfo);
+	        }
+
 
             for (int i = 0; i < THREAD_COUNT; i++) {
-                StringProcessor stringProcessor = new StringProcessor(iterationCount, startSignal, doneSignal, fw);
+                StringProcessor stringProcessor = new StringProcessor(iterationCount, startSignal, doneSignal, fw, columnCount, tableInfoHashMap);
                 if (i == 0) {
                     stringProcessor.addIterationCount(iterationMod);
                 }

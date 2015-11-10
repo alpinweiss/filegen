@@ -18,7 +18,7 @@ package eu.alpinweiss.filegen.util.impl;
 import com.mifmif.common.regex.Generex;
 import eu.alpinweiss.filegen.model.FieldDefinition;
 import eu.alpinweiss.filegen.util.FieldGenerator;
-import org.apache.poi.ss.usermodel.Cell;
+import eu.alpinweiss.filegen.util.ValueVault;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -29,18 +29,16 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class StringGenerator implements FieldGenerator {
 
-	private final FieldDefinition fieldDefinition;
 	private Generex generex;
 
 	public StringGenerator(FieldDefinition fieldDefinition) {
-		this.fieldDefinition = fieldDefinition;
 		this.generex = new Generex(fieldDefinition.getPattern());
 	}
 
 	@Override
-	public void generate(int iterationNo, ThreadLocalRandom randomGenerator, Cell cell) {
+	public void generate(int iterationNo, ThreadLocalRandom randomGenerator, ValueVault valueVault) {
 		synchronized (this) {
-			cell.setCellValue(generex.random());
+			valueVault.storeValue(generex.random());
 		}
 	}
 }

@@ -1,4 +1,4 @@
-/*   
+/*
  * Copyright 2011 Alexander Severgin
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,20 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.alpinweiss.filegen.service;
-
-import eu.alpinweiss.filegen.model.FieldDefinition;
-
-import java.util.List;
+package eu.alpinweiss.filegen.util;
 
 /**
- * {@link GenerateAdvancedFileService}.
- * 
+ * {@link ValueVault}.
+ *
  * @author Aleksandrs.Severgins | <a href="http://alpinweiss.eu">SIA Alpinweiss</a>
- * 
  */
-public interface GenerateAdvancedFileService {
+public interface ValueVault {
 
-    void generateFile(String filename, long rowCount, List<FieldDefinition> fieldDefinitionList);
+	void storeValue(String value);
 
 }

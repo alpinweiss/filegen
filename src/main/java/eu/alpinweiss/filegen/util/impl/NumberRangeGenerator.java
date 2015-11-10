@@ -17,7 +17,7 @@ package eu.alpinweiss.filegen.util.impl;
 
 import eu.alpinweiss.filegen.model.FieldDefinition;
 import eu.alpinweiss.filegen.util.FieldGenerator;
-import org.apache.poi.ss.usermodel.Cell;
+import eu.alpinweiss.filegen.util.ValueVault;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +30,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class NumberRangeGenerator implements FieldGenerator {
 
+	public static final String EMPTY = "";
 	private final FieldDefinition fieldDefinition;
 
 	public NumberRangeGenerator(FieldDefinition fieldDefinition) {
@@ -37,17 +38,17 @@ public class NumberRangeGenerator implements FieldGenerator {
 	}
 
 	@Override
-	public void generate(int iterationNo, ThreadLocalRandom randomGenerator, Cell cell) {
+	public void generate(int iterationNo, ThreadLocalRandom randomGenerator, ValueVault valueVault) {
 		synchronized (this) {
 			String pattern = fieldDefinition.getPattern();
-			if (pattern == null || "".equals(pattern)) {
-				cell.setCellValue("");
+			if (pattern == null || EMPTY.equals(pattern)) {
+				valueVault.storeValue(EMPTY);
 				return;
 			}
 
 			String[] split = pattern.split(":");
 			if (split.length == 1) {
-				cell.setCellValue(pattern);
+				valueVault.storeValue(pattern);
 				return;
 			}
 			int min = Integer.parseInt(split[0]);
@@ -57,7 +58,7 @@ public class NumberRangeGenerator implements FieldGenerator {
 				integers.add(i);
 			}
 			int index = ThreadLocalRandom.current().nextInt(0, integers.size());
-			cell.setCellValue(integers.get(index));
+			valueVault.storeValue(integers.get(index).toString());
 		}
 	}
 }

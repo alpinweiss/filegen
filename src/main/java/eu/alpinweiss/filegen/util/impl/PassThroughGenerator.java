@@ -17,7 +17,7 @@ package eu.alpinweiss.filegen.util.impl;
 
 import eu.alpinweiss.filegen.model.FieldDefinition;
 import eu.alpinweiss.filegen.util.FieldGenerator;
-import org.apache.poi.ss.usermodel.Cell;
+import eu.alpinweiss.filegen.util.ValueVault;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -35,7 +35,7 @@ public class PassThroughGenerator implements FieldGenerator {
 	}
 
 	@Override
-	public void generate(int iterationNo, ThreadLocalRandom randomGenerator, Cell cell) {
-		cell.setCellValue(fieldDefinition.getPattern());
+	public void generate(int iterationNo, ThreadLocalRandom randomGenerator, ValueVault valueVault) {
+		valueVault.storeValue(fieldDefinition.getPattern());
 	}
 }

@@ -17,6 +17,7 @@ package eu.alpinweiss.filegen.util.impl;
 
 import eu.alpinweiss.filegen.model.FieldDefinition;
 import eu.alpinweiss.filegen.util.FieldGenerator;
+import eu.alpinweiss.filegen.util.ValueVault;
 import org.apache.poi.ss.usermodel.Cell;
 
 import java.text.SimpleDateFormat;
@@ -37,12 +38,12 @@ public class DateGenerator implements FieldGenerator {
 	}
 
 	@Override
-	public void generate(int iterationNo, ThreadLocalRandom randomGenerator, Cell cell) {
+	public void generate(int iterationNo, ThreadLocalRandom randomGenerator, ValueVault valueVault) {
 		String pattern = fieldDefinition.getPattern();
 		if (pattern == null || "".equals(pattern)) {
 			pattern = "mm/DD/yyyy";
 		}
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-		cell.setCellValue(simpleDateFormat.format(new Date()));
+		valueVault.storeValue(simpleDateFormat.format(new Date()));
 	}
 }

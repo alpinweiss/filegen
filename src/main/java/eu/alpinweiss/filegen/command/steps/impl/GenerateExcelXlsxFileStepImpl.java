@@ -17,24 +17,8 @@ package eu.alpinweiss.filegen.command.steps.impl;
 
 import com.google.inject.Inject;
 import eu.alpinweiss.filegen.command.steps.GenerateExcelXlsxFileStep;
-import eu.alpinweiss.filegen.model.FieldDefinition;
 import eu.alpinweiss.filegen.model.Model;
 import eu.alpinweiss.filegen.service.GenerateXlsxFileService;
-import eu.alpinweiss.filegen.util.MyTableInfo;
-import eu.alpinweiss.filegen.util.SheetProcessor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.streaming.SXSSFSheet;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 /**
  * {@link GenerateExcelXlsxFileStepImpl}.

@@ -17,7 +17,7 @@ package eu.alpinweiss.filegen.service.impl;
 
 import eu.alpinweiss.filegen.model.FieldDefinition;
 import eu.alpinweiss.filegen.service.GenerateXlsxFileService;
-import eu.alpinweiss.filegen.util.MyTableInfo;
+import eu.alpinweiss.filegen.util.Input2TableInfo;
 import eu.alpinweiss.filegen.util.SheetProcessor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -70,15 +71,15 @@ public class GenerateXlsxFileServiceImpl implements GenerateXlsxFileService {
 			int columnCount = fieldDefinitionList.size();
 
 			//Create Hash Map of Field Definitions
-			LinkedHashMap<Integer, MyTableInfo> hashMap = new LinkedHashMap<>(columnCount);
+			Map<Integer, Input2TableInfo> input2TableInfoMap = new LinkedHashMap<>(columnCount);
 
 			for (int i = 0; i < columnCount; i++) {
-				MyTableInfo db2TableInfo = new MyTableInfo();
+				Input2TableInfo input2TableInfo = new Input2TableInfo();
 				FieldDefinition fieldDefinition = fieldDefinitionList.get(i);
-				db2TableInfo.setFieldText(fieldDefinition.getFieldName());
-				db2TableInfo.setFieldDefinition(fieldDefinition);
-				db2TableInfo.initGenerator();
-				hashMap.put(i, db2TableInfo);
+				input2TableInfo.setFieldText(fieldDefinition.getFieldName());
+				input2TableInfo.setFieldDefinition(fieldDefinition);
+				input2TableInfo.initGenerator();
+				input2TableInfoMap.put(i, input2TableInfo);
 			}
 
 			if (sheetCount > 1) {
@@ -87,19 +88,19 @@ public class GenerateXlsxFileServiceImpl implements GenerateXlsxFileService {
 
 				doneSignal = new CountDownLatch(sheetCount);
 
-				SheetProcessor stringProcessorSheet1 = new SheetProcessor(rowCount, startSignal, doneSignal, cs, sheet1, columnCount, hashMap);
+				SheetProcessor stringProcessorSheet1 = new SheetProcessor(rowCount, startSignal, doneSignal, cs, sheet1, columnCount, input2TableInfoMap);
 				new Thread(stringProcessorSheet1, "Processor-" + sheetCount).start();
 
 				for (int i = 0; i < sheetCount-1; i++) {
 					SXSSFSheet sheet = (SXSSFSheet) wb.createSheet("myData_" + i);
-					SheetProcessor stringProcessor = new SheetProcessor(rowCount, startSignal, doneSignal, cs, sheet, columnCount, hashMap);
+					SheetProcessor stringProcessor = new SheetProcessor(rowCount, startSignal, doneSignal, cs, sheet, columnCount, input2TableInfoMap);
 					new Thread(stringProcessor, "Processor-" + i).start();
 				}
 
 				startSignal.countDown();
 				doneSignal.await();
 			} else {
-				new SheetProcessor().generateSheetData(rowCount, cs, sheet1, columnCount, hashMap);
+				new SheetProcessor().generateSheetData(rowCount, cs, sheet1, columnCount, input2TableInfoMap);
 			}
 
 

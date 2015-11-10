@@ -23,7 +23,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 
 import java.util.Iterator;
-import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -42,17 +42,17 @@ public class SheetProcessor implements Runnable {
 	private CellStyle cs;
 	private SXSSFSheet sheet;
 	private int columnCount;
-	private LinkedHashMap<Integer, MyTableInfo> hashMap;
+	private Map<Integer, Input2TableInfo> myTableInfoMap;
 
 	public SheetProcessor(long rowCount, CountDownLatch startSignal, CountDownLatch doneSignal, CellStyle cs, SXSSFSheet sheet,
-	                      int columnCount, LinkedHashMap<Integer, MyTableInfo> hashMap) {
+	                      int columnCount, Map<Integer, Input2TableInfo> myTableInfoMap) {
 		this.rowCount = rowCount;
 		this.startSignal = startSignal;
 		this.doneSignal = doneSignal;
 		this.cs = cs;
 		this.sheet = sheet;
 		this.columnCount = columnCount;
-		this.hashMap = hashMap;
+		this.myTableInfoMap = myTableInfoMap;
 	}
 
 	public SheetProcessor() {
@@ -63,7 +63,7 @@ public class SheetProcessor implements Runnable {
 		try {
 			startSignal.await();
 
-			generateSheetData(rowCount, cs, sheet, columnCount, hashMap);
+			generateSheetData(rowCount, cs, sheet, columnCount, myTableInfoMap);
 
 			doneSignal.countDown();
 		} catch (InterruptedException e) {
@@ -71,23 +71,23 @@ public class SheetProcessor implements Runnable {
 		}
 	}
 
-	public void generateSheetData(long rowCount, CellStyle cs, SXSSFSheet sheet, int columnCount, LinkedHashMap<Integer, MyTableInfo> hashMap) {
+	public void generateSheetData(long rowCount, CellStyle cs, SXSSFSheet sheet, int columnCount, Map<Integer, Input2TableInfo> hashMap) {
 		Cell cell;// Row and column indexes
 		int idx = 0;
 		int idy = 0;
 
 		// Generate column headings
 		Row row = sheet.createRow(idx);
-		MyTableInfo db2TableInfo;
+		Input2TableInfo input2TableInfo;
 
 		Iterator<Integer> iterator = hashMap.keySet().iterator();
 		while (iterator.hasNext()) {
 			Integer key = iterator.next();
-			db2TableInfo = hashMap.get(key);
+			input2TableInfo = hashMap.get(key);
 			cell = row.createCell(idy);
-			cell.setCellValue(db2TableInfo.getFieldText());
+			cell.setCellValue(input2TableInfo.getFieldText());
 			cell.setCellStyle(cs);
-			sheet.setColumnWidth(idy, (db2TableInfo.getFieldText().trim().length() * 500));
+			sheet.setColumnWidth(idy, (input2TableInfo.getFieldText().trim().length() * 500));
 			idy++;
 		}
 
@@ -100,10 +100,15 @@ public class SheetProcessor implements Runnable {
 			}
 			for (int colCount = 0; colCount < columnCount; colCount++) {
 
-				cell = row.createCell(colCount);
-				db2TableInfo = hashMap.get(colCount);
+				final Cell dataCell = row.createCell(colCount);
+				input2TableInfo = hashMap.get(colCount);
 
-				db2TableInfo.generator().generate(i, randomGenerator, cell);
+				input2TableInfo.generator().generate(i, randomGenerator, new ValueVault() {
+					@Override
+					public void storeValue(String value) {
+						dataCell.setCellValue(value);
+					}
+				});
 			}
 
 		}
