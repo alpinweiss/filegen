@@ -15,10 +15,8 @@
  */
 package eu.alpinweiss.filegen.command.steps.impl;
 
-import com.google.inject.Inject;
 import eu.alpinweiss.filegen.command.steps.GenerateAdvancedFileStep;
 import eu.alpinweiss.filegen.model.Model;
-import eu.alpinweiss.filegen.service.GenerateAdvancedFileService;
 
 /**
  * {@link GenerateSimpleFileStepImpl}.
@@ -27,13 +25,8 @@ import eu.alpinweiss.filegen.service.GenerateAdvancedFileService;
  */
 public class GenerateAdvancedFileStepImpl implements GenerateAdvancedFileStep {
 
-    @Inject
-    private GenerateAdvancedFileService generateAdvancedFileService;
-
     @Override
     public void execute(Model model) {
-	    String outputFileName = model.getOutputFileName();
-	    generateAdvancedFileService.generateFile(outputFileName, model.getRowCount(), model.getFieldDefinitionList());
-	    model.getFieldDefinitionList().clear();
+	    System.out.println("will be implemented soon");
     }
 }

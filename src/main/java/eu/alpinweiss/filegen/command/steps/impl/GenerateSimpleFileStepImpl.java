@@ -15,8 +15,10 @@
  */
 package eu.alpinweiss.filegen.command.steps.impl;
 
+import com.google.inject.Inject;
 import eu.alpinweiss.filegen.command.steps.GenerateSimpleFileStep;
 import eu.alpinweiss.filegen.model.Model;
+import eu.alpinweiss.filegen.service.GenerateAdvancedFileService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,41 +34,13 @@ import java.util.Date;
  */
 public class GenerateSimpleFileStepImpl implements GenerateSimpleFileStep {
 
-    private final static Logger LOGGER = LogManager.getLogger(GenerateSimpleFileStepImpl.class);
+	@Inject
+	private GenerateAdvancedFileService generateAdvancedFileService;
 
-    @Override
-    public void execute(Model model) {
-
-        long iterations = getIterations(model.getParameter(SIMPLE_FILE));
-
-        long startTime = new Date().getTime();
-
-        try {
-            String str = "SomeMoooreText\r\n";
-            File newTextFile = new File("thetextfile.txt");
-
-            FileWriter fw = new FileWriter(newTextFile);
-
-            for (long i = 0; i < iterations ; i++) {
-                if (i != 0 && i % 1000000 == 0) {
-                    System.out.println("processed " + i + " rows");
-                }
-                fw.write(str);
-            }
-            fw.close();
-
-            System.out.println("Done");
-            System.out.println("Time used " + ((new Date().getTime() - startTime) / 1000) + " sec");
-        } catch (IOException iox) {
-            LOGGER.error(iox.getMessage(), iox);
-        }
-
-    }
-
-    private long getIterations(String arg) {
-        if (arg!= null) {
-            return Long.parseLong(arg);
-        }
-        return 250000000;
-    }
+	@Override
+	public void execute(Model model) {
+		String outputFileName = model.getOutputFileName();
+		generateAdvancedFileService.generateFile(outputFileName, model.getRowCount(), model.getFieldDefinitionList());
+		model.getFieldDefinitionList().clear();
+	}
 }
