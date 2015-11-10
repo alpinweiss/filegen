@@ -62,7 +62,7 @@ public class ReadInputParametersStepImpl implements ReadInputParametersStep {
             String outputFileName = readOutputFileName(sheet);
 			int sheetCount = readSheetCount(sheet);
 
-			System.out.println("Iterations: " + iterationCount + " lineSeparator" + lineSeparator);
+			System.out.println("Iterations: " + iterationCount + " lineSeparator: " + lineSeparator);
             List<Object[]> fields = new ArrayList<Object[]>(sheet.getLastRowNum()-4);
 
 			for (int i = 5; i <= sheet.getLastRowNum(); i++) {

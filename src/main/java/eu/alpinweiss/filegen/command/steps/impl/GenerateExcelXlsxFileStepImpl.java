@@ -15,9 +15,11 @@
  */
 package eu.alpinweiss.filegen.command.steps.impl;
 
+import com.google.inject.Inject;
 import eu.alpinweiss.filegen.command.steps.GenerateExcelXlsxFileStep;
 import eu.alpinweiss.filegen.model.FieldDefinition;
 import eu.alpinweiss.filegen.model.Model;
+import eu.alpinweiss.filegen.service.GenerateXlsxFileService;
 import eu.alpinweiss.filegen.util.MyTableInfo;
 import eu.alpinweiss.filegen.util.SheetProcessor;
 import org.apache.logging.log4j.LogManager;
@@ -41,98 +43,13 @@ import java.util.concurrent.CountDownLatch;
  */
 public class GenerateExcelXlsxFileStepImpl implements GenerateExcelXlsxFileStep {
 
-    private final static Logger LOGGER = LogManager.getLogger(GenerateExcelXlsxFileStepImpl.class);
+	@Inject
+	private GenerateXlsxFileService generateXlsxFileService;
 
     @Override
     public void execute(Model model) {
         String outputFileName = model.getOutputFileName();
-        generateExcel(outputFileName, model.getRowCount(), model.getFieldDefinitionList(), model.getSheetCount());
+	    generateXlsxFileService.generateExcel(outputFileName, model.getRowCount(), model.getFieldDefinitionList(), model.getSheetCount());
         model.getFieldDefinitionList().clear();
-    }
-
-    private void generateExcel(String excelFilename, long rowCount, List<FieldDefinition> fieldDefinitionList, int sheetCount) {
-
-        long startTime = new Date().getTime();
-
-        System.out.println("Excel data generation started");
-
-        //New Workbook
-        Workbook wb = new SXSSFWorkbook();
-        
-        try {
-            Cell cell;
-
-            //Cell style for header row
-            CellStyle cs = wb.createCellStyle();
-            cs.setFillForegroundColor(IndexedColors.LIME.getIndex());
-            cs.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
-            Font f = wb.createFont();
-            f.setBoldweight(Font.BOLDWEIGHT_BOLD);
-            f.setFontHeightInPoints((short) 12);
-            cs.setFont(f);
-
-            //New Sheet
-            SXSSFSheet sheet1 = (SXSSFSheet) wb.createSheet("myData");
-
-            int columnCount = fieldDefinitionList.size();
-
-            //Create Hash Map of Field Definitions
-            LinkedHashMap<Integer, MyTableInfo> hashMap = new LinkedHashMap<Integer, MyTableInfo>(columnCount);
-
-            for (int i = 0; i < columnCount; i++) {
-                MyTableInfo db2TableInfo = new MyTableInfo();
-                FieldDefinition fieldDefinition = fieldDefinitionList.get(i);
-                db2TableInfo.setFieldText(fieldDefinition.getFieldName());
-                db2TableInfo.setFieldDefinition(fieldDefinition);
-	            db2TableInfo.initGenerator();
-                hashMap.put(i, db2TableInfo);
-            }
-
-	        if (sheetCount > 1) {
-		        CountDownLatch startSignal = new CountDownLatch(1);
-		        CountDownLatch doneSignal;
-
-		        doneSignal = new CountDownLatch(sheetCount);
-
-		        SheetProcessor stringProcessorSheet1 = new SheetProcessor(rowCount, startSignal, doneSignal, cs, sheet1, columnCount, hashMap);
-		        new Thread(stringProcessorSheet1, "Processor-" + sheetCount).start();
-
-		        for (int i = 0; i < sheetCount-1; i++) {
-			        SXSSFSheet sheet = (SXSSFSheet) wb.createSheet("myData_" + i);
-			        SheetProcessor stringProcessor = new SheetProcessor(rowCount, startSignal, doneSignal, cs, sheet, columnCount, hashMap);
-			        new Thread(stringProcessor, "Processor-" + i).start();
-		        }
-
-		        startSignal.countDown();
-		        doneSignal.await();
-	        } else {
-		        new SheetProcessor().generateSheetData(rowCount, cs, sheet1, columnCount, hashMap);
-	        }
-
-
-	        System.out.println("Excel data generation finished.");
-            long generationTime = new Date().getTime();
-            System.out.println("Time used " + ((generationTime - startTime) / 1000) + " sec");
-            System.out.println("Writing to file.");
-
-            FileOutputStream fileOut = new FileOutputStream(excelFilename.trim());
-
-            wb.write(fileOut);
-            fileOut.close();
-
-            long writeTime = new Date().getTime();
-            System.out.println("Time used " + ((writeTime - generationTime) / 1000) + " sec");
-            System.out.println("Total time used " + ((writeTime - startTime) / 1000) + " sec");
-            System.out.println("Done");
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-        } finally {
-        	try {
-				wb.close();
-			} catch (IOException e) {
-				LOGGER.error(e.getMessage(), e);
-			}
-        }
-
     }
 }
