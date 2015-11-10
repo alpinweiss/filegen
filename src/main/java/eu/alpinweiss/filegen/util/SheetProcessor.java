@@ -42,17 +42,17 @@ public class SheetProcessor implements Runnable {
 	private CellStyle cs;
 	private SXSSFSheet sheet;
 	private int columnCount;
-	private Map<Integer, Input2TableInfo> myTableInfoMap;
+	private Map<Integer, Input2TableInfo> input2TableInfoMap;
 
 	public SheetProcessor(long rowCount, CountDownLatch startSignal, CountDownLatch doneSignal, CellStyle cs, SXSSFSheet sheet,
-	                      int columnCount, Map<Integer, Input2TableInfo> myTableInfoMap) {
+	                      int columnCount, Map<Integer, Input2TableInfo> input2TableInfoMap) {
 		this.rowCount = rowCount;
 		this.startSignal = startSignal;
 		this.doneSignal = doneSignal;
 		this.cs = cs;
 		this.sheet = sheet;
 		this.columnCount = columnCount;
-		this.myTableInfoMap = myTableInfoMap;
+		this.input2TableInfoMap = input2TableInfoMap;
 	}
 
 	public SheetProcessor() {
@@ -63,7 +63,7 @@ public class SheetProcessor implements Runnable {
 		try {
 			startSignal.await();
 
-			generateSheetData(rowCount, cs, sheet, columnCount, myTableInfoMap);
+			generateSheetData(rowCount, cs, sheet, columnCount, input2TableInfoMap);
 
 			doneSignal.countDown();
 		} catch (InterruptedException e) {

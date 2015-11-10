@@ -45,7 +45,8 @@ public class StringProcessor implements Runnable {
 	private int columnCount;
 	private Map<Integer, Input2TableInfo> input2TableInfoMap;
 
-	public StringProcessor(long rowCount, CountDownLatch startSignal, CountDownLatch doneSignal, FileWriter fw, int columnCount, Map<Integer, Input2TableInfo> input2TableInfoMap) {
+	public StringProcessor(long rowCount, CountDownLatch startSignal, CountDownLatch doneSignal, FileWriter fw,
+	                       int columnCount, Map<Integer, Input2TableInfo> input2TableInfoMap) {
         this.rowCount = rowCount;
         this.startSignal = startSignal;
         this.doneSignal = doneSignal;
@@ -58,10 +59,7 @@ public class StringProcessor implements Runnable {
     public void run() {
         try {
             startSignal.await();
-
             ThreadLocalRandom randomGenerator = ThreadLocalRandom.current();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-
             System.out.println(Thread.currentThread().getName() + " starts generating " + rowCount + " rows");
 
             for (long i = 0; i < rowCount; i++) {
