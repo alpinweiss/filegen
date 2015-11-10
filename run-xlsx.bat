@@ -1,0 +1,1 @@
+java -Xmx4048m -Xms1024m -jar filegen-1.0.jar -i InputSample.xlsx -x
