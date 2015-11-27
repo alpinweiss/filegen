@@ -17,7 +17,6 @@ package eu.alpinweiss.filegen.util;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,12 +37,12 @@ public class StringProcessor implements Runnable {
 
     private long rowCount;
 
-    private final List<String> stringList = new ArrayList<String>();
+    private final List<String> stringList = new ArrayList<>();
     private final CountDownLatch startSignal;
     private final CountDownLatch doneSignal;
     private final FileWriter fw;
-	private int columnCount;
-	private Map<Integer, Input2TableInfo> input2TableInfoMap;
+	private final int columnCount;
+	private final Map<Integer, Input2TableInfo> input2TableInfoMap;
 
 	public StringProcessor(long rowCount, CountDownLatch startSignal, CountDownLatch doneSignal, FileWriter fw,
 	                       int columnCount, Map<Integer, Input2TableInfo> input2TableInfoMap) {
@@ -96,9 +95,7 @@ public class StringProcessor implements Runnable {
                 }
             }
             doneSignal.countDown();
-        } catch (InterruptedException e) {
-            LOGGER.error(e.getMessage(), e);
-        } catch (IOException e) {
+        } catch (InterruptedException | IOException e) {
             LOGGER.error(e.getMessage(), e);
         }
     }

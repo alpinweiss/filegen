@@ -40,6 +40,6 @@ public class FloatGenerator implements FieldGenerator {
 		if (pattern != null) {
 			valueVault.storeValue(String.format(pattern, randomGenerator.nextDouble()));
 		}
-		valueVault.storeValue(new Double(randomGenerator.nextDouble()).toString());
+		valueVault.storeValue(Double.toString(randomGenerator.nextDouble()));
 	}
 }

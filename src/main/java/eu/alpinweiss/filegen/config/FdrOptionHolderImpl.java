@@ -36,7 +36,7 @@ import java.util.Set;
 @Singleton
 public class FdrOptionHolderImpl implements FdrOptionHolder {
 
-	private final Map<String, Class<? extends CommandStep>> commandSteps = new LinkedHashMap<String, Class<? extends CommandStep>>();
+	private final Map<String, Class<? extends CommandStep>> commandSteps = new LinkedHashMap<>();
 	private final Options options = new Options();
 
 	private final static Logger LOGGER = LogManager.getLogger(FdrOptionHolderImpl.class);

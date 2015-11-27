@@ -35,7 +35,7 @@ public class XmlConfigParserImpl implements XmlConfigParser {
 
 	@Override
 	public Set<FdrStep> getFdrSteps(String fileName) {
-		Set<FdrStep> fdrStepSet = new HashSet<FdrStep>();
+		Set<FdrStep> fdrStepSet = new HashSet<>();
 
         InputStream resourceAsStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
 
@@ -68,7 +68,7 @@ public class XmlConfigParserImpl implements XmlConfigParser {
 				NodeList requiredElement = element.getElementsByTagName(REQUIRED);
 				line = (Element) requiredElement.item(0);
 				String boolStr = getCharacterDataFromElement(line);
-				Boolean required = new Boolean(boolStr);
+				Boolean required = Boolean.valueOf(boolStr);
 				step.setRequired(required);
 
                 NodeList param = element.getElementsByTagName(PARAM_COUNT);

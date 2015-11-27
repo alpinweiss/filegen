@@ -27,10 +27,10 @@ import java.util.*;
  */
 public class Model {
 
-    private List<FieldDefinition> fieldDefinitionList = new ArrayList<FieldDefinition>();
+    private List<FieldDefinition> fieldDefinitionList = new ArrayList<>();
 
-	private final Map<String, String> parametersMap = new HashMap<String, String>();
-	private final Set<CommandStep> commands = new LinkedHashSet<CommandStep>();
+	private final Map<String, String> parametersMap = new HashMap<>();
+	private final Set<CommandStep> commands = new LinkedHashSet<>();
     private long rowCount;
     private String lineSeparator;
     private String outputFileName;

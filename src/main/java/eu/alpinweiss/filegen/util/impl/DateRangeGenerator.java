@@ -38,7 +38,6 @@ public class DateRangeGenerator implements FieldGenerator {
 
 	public static final String EMPTY = "";
 	private final FieldDefinition fieldDefinition;
-	private SimpleDateFormat dateFormat;
 
 	private final static Logger LOGGER = LogManager.getLogger(DateRangeGenerator.class);
 
@@ -62,7 +61,7 @@ public class DateRangeGenerator implements FieldGenerator {
 			}
 			try {
 				String dateFormatPattern = split[0];
-				dateFormat = new SimpleDateFormat(dateFormatPattern);
+				SimpleDateFormat dateFormat = new SimpleDateFormat(dateFormatPattern);
 				Date min = dateFormat.parse(split[1]);
 				Date max = dateFormat.parse(split[2]);
 

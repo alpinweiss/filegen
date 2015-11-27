@@ -40,6 +40,6 @@ public class IntegerGenerator implements FieldGenerator {
 		if (pattern != null) {
 			valueVault.storeValue(String.format(pattern, randomGenerator.nextInt(Integer.MAX_VALUE)));
 		}
-		valueVault.storeValue(new Integer(randomGenerator.nextInt()).toString());
+		valueVault.storeValue(Integer.toString(randomGenerator.nextInt()));
 	}
 }

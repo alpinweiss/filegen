@@ -54,8 +54,6 @@ public class GenerateXlsxFileServiceImpl implements GenerateXlsxFileService {
 		Workbook wb = new SXSSFWorkbook();
 
 		try {
-			Cell cell;
-
 			//Cell style for header row
 			CellStyle cs = wb.createCellStyle();
 			cs.setFillForegroundColor(IndexedColors.LIME.getIndex());

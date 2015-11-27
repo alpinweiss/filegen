@@ -16,7 +16,6 @@
 package eu.alpinweiss.filegen.service;
 
 import eu.alpinweiss.filegen.model.FieldDefinition;
-import eu.alpinweiss.filegen.model.Model;
 
 import java.util.List;
 

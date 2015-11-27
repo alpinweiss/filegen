@@ -22,7 +22,6 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ThreadLocalRandom;
@@ -80,9 +79,7 @@ public class SheetProcessor implements Runnable {
 		Row row = sheet.createRow(idx);
 		Input2TableInfo input2TableInfo;
 
-		Iterator<Integer> iterator = hashMap.keySet().iterator();
-		while (iterator.hasNext()) {
-			Integer key = iterator.next();
+		for (Integer key : hashMap.keySet()) {
 			input2TableInfo = hashMap.get(key);
 			cell = row.createCell(idy);
 			cell.setCellValue(input2TableInfo.getFieldText());

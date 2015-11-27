@@ -18,7 +18,6 @@ package eu.alpinweiss.filegen.util.impl;
 import eu.alpinweiss.filegen.model.FieldDefinition;
 import eu.alpinweiss.filegen.util.FieldGenerator;
 import eu.alpinweiss.filegen.util.ValueVault;
-import org.apache.poi.ss.usermodel.Cell;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

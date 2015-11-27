@@ -29,7 +29,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class StringGenerator implements FieldGenerator {
 
-	private Generex generex;
+	private final Generex generex;
 
 	public StringGenerator(FieldDefinition fieldDefinition) {
 		this.generex = new Generex(fieldDefinition.getPattern());
