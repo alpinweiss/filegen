@@ -64,7 +64,7 @@ public class GenerateXlsxFileServiceImpl implements GenerateXlsxFileService {
 			cs.setFont(f);
 
 			//New Sheet
-			SXSSFSheet sheet1 = (SXSSFSheet) wb.createSheet("myData");
+			SXSSFSheet sheet1 = (SXSSFSheet) wb.createSheet("dataSheet");
 
 			int columnCount = fieldDefinitionList.size();
 
@@ -76,6 +76,7 @@ public class GenerateXlsxFileServiceImpl implements GenerateXlsxFileService {
 				FieldDefinition fieldDefinition = fieldDefinitionList.get(i);
 				input2TableInfo.setFieldText(fieldDefinition.getFieldName());
 				input2TableInfo.setFieldDefinition(fieldDefinition);
+				input2TableInfo.initCellStyle(wb);
 				input2TableInfo.initGenerator();
 				input2TableInfoMap.put(i, input2TableInfo);
 			}
@@ -90,7 +91,7 @@ public class GenerateXlsxFileServiceImpl implements GenerateXlsxFileService {
 				new Thread(stringProcessorSheet1, "Processor-" + sheetCount).start();
 
 				for (int i = 0; i < sheetCount-1; i++) {
-					SXSSFSheet sheet = (SXSSFSheet) wb.createSheet("myData_" + i);
+					SXSSFSheet sheet = (SXSSFSheet) wb.createSheet("dataSheet_" + i);
 					SheetProcessor stringProcessor = new SheetProcessor(rowCount, startSignal, doneSignal, cs, sheet, columnCount, input2TableInfoMap);
 					new Thread(stringProcessor, "Processor-" + i).start();
 				}

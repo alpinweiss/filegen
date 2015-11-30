@@ -15,7 +15,11 @@
  */
 package eu.alpinweiss.filegen.util.impl;
 
+import com.mifmif.common.regex.Generex;
 import eu.alpinweiss.filegen.model.FieldDefinition;
+import eu.alpinweiss.filegen.model.FieldType;
+import eu.alpinweiss.filegen.model.Generate;
+import eu.alpinweiss.filegen.util.AbstractDataWrapper;
 import eu.alpinweiss.filegen.util.FieldGenerator;
 import eu.alpinweiss.filegen.util.ValueVault;
 
@@ -29,17 +33,54 @@ import java.util.concurrent.ThreadLocalRandom;
 public class IntegerGenerator implements FieldGenerator {
 
 	private final FieldDefinition fieldDefinition;
+	private Generex generex;
 
 	public IntegerGenerator(FieldDefinition fieldDefinition) {
 		this.fieldDefinition = fieldDefinition;
 	}
 
 	@Override
-	public void generate(int iterationNo, ThreadLocalRandom randomGenerator, ValueVault valueVault) {
-		String pattern = fieldDefinition.getPattern();
-		if (pattern != null) {
-			valueVault.storeValue(String.format(pattern, randomGenerator.nextInt(Integer.MAX_VALUE)));
+	public void generate(int iterationNo, final ThreadLocalRandom randomGenerator, ValueVault valueVault) {
+		synchronized (this) {
+			final String pattern = fieldDefinition.getPattern();
+			if (Generate.Y.equals(fieldDefinition.getGenerate())) {
+				if (pattern != null && !"".equals(pattern)) {
+					if (generex == null) {
+						this.generex = new Generex(fieldDefinition.getPattern());
+					}
+					valueVault.storeValue(new IntegerDataWrapper() {
+						@Override
+						public Double getNumberValue() {
+							return Double.valueOf(generex.random());
+						}
+					});
+				} else {
+					valueVault.storeValue(new IntegerDataWrapper() {
+						@Override
+						public Double getNumberValue() {
+							return new Double(randomGenerator.nextInt());
+						}
+					});
+				}
+			} else {
+				if (pattern != null && !"".equals(pattern)) {
+					valueVault.storeValue(new IntegerDataWrapper() {
+						@Override
+						public Double getNumberValue() {
+							return Double.valueOf(pattern);
+						}
+					});
+				} else {
+					valueVault.storeValue(new IntegerDataWrapper());
+				}
+			}
 		}
-		valueVault.storeValue(Integer.toString(randomGenerator.nextInt()));
+	}
+
+	private class IntegerDataWrapper extends AbstractDataWrapper {
+		@Override
+		public FieldType getFieldType() {
+			return FieldType.INTEGER;
+		}
 	}
 }

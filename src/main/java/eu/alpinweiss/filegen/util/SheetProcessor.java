@@ -15,6 +15,7 @@
  */
 package eu.alpinweiss.filegen.util;
 
+import eu.alpinweiss.filegen.model.FieldType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
@@ -100,10 +101,26 @@ public class SheetProcessor implements Runnable {
 				final Cell dataCell = row.createCell(colCount);
 				input2TableInfo = hashMap.get(colCount);
 
+				final CellStyle cellStyle = input2TableInfo.getCellStyle();
+
 				input2TableInfo.generator().generate(i, randomGenerator, new ValueVault() {
 					@Override
-					public void storeValue(String value) {
-						dataCell.setCellValue(value);
+					public void storeValue(DataWrapper wrapper) {
+						FieldType fieldType = wrapper.getFieldType();
+						switch (fieldType) {
+							case DATE:
+								dataCell.setCellStyle(cellStyle);
+								dataCell.setCellValue(wrapper.getDateValue());
+								break;
+							case FLOAT:
+							case INTEGER:
+								dataCell.setCellType(Cell.CELL_TYPE_NUMERIC);
+								dataCell.setCellValue(wrapper.getNumberValue());
+								break;
+							default:
+								dataCell.setCellValue(wrapper.getStringValue());
+						}
+
 					}
 				});
 			}

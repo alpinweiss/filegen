@@ -15,10 +15,15 @@
  */
 package eu.alpinweiss.filegen.util.impl;
 
+import com.mifmif.common.regex.Generex;
 import eu.alpinweiss.filegen.model.FieldDefinition;
+import eu.alpinweiss.filegen.model.FieldType;
+import eu.alpinweiss.filegen.model.Generate;
+import eu.alpinweiss.filegen.util.AbstractDataWrapper;
 import eu.alpinweiss.filegen.util.FieldGenerator;
 import eu.alpinweiss.filegen.util.ValueVault;
 
+import java.util.Properties;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -29,17 +34,54 @@ import java.util.concurrent.ThreadLocalRandom;
 public class FloatGenerator implements FieldGenerator {
 
 	private final FieldDefinition fieldDefinition;
+	private Generex generex;
 
 	public FloatGenerator(FieldDefinition fieldDefinition) {
 		this.fieldDefinition = fieldDefinition;
 	}
 
 	@Override
-	public void generate(int iterationNo, ThreadLocalRandom randomGenerator, ValueVault valueVault) {
-		String pattern = fieldDefinition.getPattern();
-		if (pattern != null) {
-			valueVault.storeValue(String.format(pattern, randomGenerator.nextDouble()));
+	public void generate(int iterationNo, final ThreadLocalRandom randomGenerator, ValueVault valueVault) {
+		synchronized (this) {
+			final String pattern = fieldDefinition.getPattern();
+			if (Generate.Y.equals(fieldDefinition.getGenerate())) {
+				if (pattern != null && !"".equals(pattern)) {
+					if (generex == null) {
+						this.generex = new Generex(fieldDefinition.getPattern());
+					}
+					valueVault.storeValue(new FloatDataWrapper() {
+						@Override
+						public Double getNumberValue() {
+							return Double.valueOf(generex.random());
+						}
+					});
+				} else {
+					valueVault.storeValue(new FloatDataWrapper() {
+						@Override
+						public Double getNumberValue() {
+							return randomGenerator.nextDouble();
+						}
+					});
+				}
+			} else {
+				if (pattern != null && !"".equals(pattern)) {
+					valueVault.storeValue(new FloatDataWrapper() {
+						@Override
+						public Double getNumberValue() {
+							return Double.valueOf(pattern);
+						}
+					});
+				} else {
+					valueVault.storeValue(new FloatDataWrapper());
+				}
+			}
 		}
-		valueVault.storeValue(Double.toString(randomGenerator.nextDouble()));
+	}
+
+	private class FloatDataWrapper extends AbstractDataWrapper {
+		@Override
+		public FieldType getFieldType() {
+			return FieldType.FLOAT;
+		}
 	}
 }

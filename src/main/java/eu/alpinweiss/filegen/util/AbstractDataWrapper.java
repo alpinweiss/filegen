@@ -15,13 +15,29 @@
  */
 package eu.alpinweiss.filegen.util;
 
+import org.apache.poi.ss.usermodel.CellStyle;
+
+import java.util.Date;
+
 /**
- * {@link ValueVault}.
+ * {@link AbstractDataWrapper}.
  *
  * @author Aleksandrs.Severgins | <a href="http://alpinweiss.eu">SIA Alpinweiss</a>
  */
-public interface ValueVault {
+public abstract class AbstractDataWrapper implements DataWrapper {
 
-	void storeValue(DataWrapper value);
+	@Override
+	public String getStringValue() {
+		return null;
+	}
 
+	@Override
+	public Date getDateValue() {
+		return null;
+	}
+
+	@Override
+	public Double getNumberValue() {
+		return null;
+	}
 }

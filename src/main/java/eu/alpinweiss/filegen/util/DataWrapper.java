@@ -13,29 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.alpinweiss.filegen.util.impl;
+package eu.alpinweiss.filegen.util;
 
-import eu.alpinweiss.filegen.model.FieldDefinition;
-import eu.alpinweiss.filegen.util.FieldGenerator;
-import eu.alpinweiss.filegen.util.ValueVault;
+import eu.alpinweiss.filegen.model.FieldType;
+import org.apache.poi.ss.usermodel.CellStyle;
 
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.Date;
 
 /**
- * {@link PassThroughGenerator}.
+ * {@link DataWrapper}.
  *
  * @author Aleksandrs.Severgins | <a href="http://alpinweiss.eu">SIA Alpinweiss</a>
  */
-public class PassThroughGenerator implements FieldGenerator {
-
-	private final FieldDefinition fieldDefinition;
-
-	public PassThroughGenerator(FieldDefinition fieldDefinition) {
-		this.fieldDefinition = fieldDefinition;
-	}
-
-	@Override
-	public void generate(int iterationNo, ThreadLocalRandom randomGenerator, ValueVault valueVault) {
-		valueVault.storeValue(fieldDefinition.getPattern());
-	}
+public interface DataWrapper {
+	FieldType getFieldType();
+	String getStringValue();
+	Date getDateValue();
+	Double getNumberValue();
 }

@@ -16,9 +16,13 @@
 package eu.alpinweiss.filegen.util.impl;
 
 import eu.alpinweiss.filegen.model.FieldDefinition;
+import eu.alpinweiss.filegen.model.FieldType;
+import eu.alpinweiss.filegen.model.Generate;
+import eu.alpinweiss.filegen.util.AbstractDataWrapper;
 import eu.alpinweiss.filegen.util.FieldGenerator;
 import eu.alpinweiss.filegen.util.ValueVault;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.ThreadLocalRandom;
@@ -39,10 +43,55 @@ public class DateGenerator implements FieldGenerator {
 	@Override
 	public void generate(int iterationNo, ThreadLocalRandom randomGenerator, ValueVault valueVault) {
 		String pattern = fieldDefinition.getPattern();
+
 		if (pattern == null || "".equals(pattern)) {
-			pattern = "mm/DD/yyyy";
+			if (Generate.Y.equals(fieldDefinition.getGenerate())) {
+				valueVault.storeValue(new DateDataWrapper());
+			} else {
+				valueVault.storeValue(new DateDataWrapper() {
+					@Override
+					public Date getDateValue() {
+						return null;
+					}
+				});
+			}
+		} else {
+			if (Generate.Y.equals(fieldDefinition.getGenerate())) {
+				final String[] split = pattern.split(":");
+				if (split.length == 1) {
+					valueVault.storeValue(new DateDataWrapper());
+				}
+				String dateFormatPattern = split[0];
+				final SimpleDateFormat dateFormat = new SimpleDateFormat(dateFormatPattern);
+
+				valueVault.storeValue(new DateDataWrapper() {
+					@Override
+					public Date getDateValue() {
+						try {
+							return dateFormat.parse(split[1]);
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
+						return null;
+					}
+				});
+			} else {
+				valueVault.storeValue(new DateDataWrapper());
+			}
 		}
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-		valueVault.storeValue(simpleDateFormat.format(new Date()));
 	}
+
+	private class DateDataWrapper extends AbstractDataWrapper {
+
+		@Override
+		public FieldType getFieldType() {
+			return FieldType.DATE;
+		}
+
+		@Override
+		public Date getDateValue() {
+			return new Date();
+		}
+	}
+
 }

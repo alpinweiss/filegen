@@ -16,6 +16,8 @@
 package eu.alpinweiss.filegen.util.impl;
 
 import eu.alpinweiss.filegen.model.FieldDefinition;
+import eu.alpinweiss.filegen.model.FieldType;
+import eu.alpinweiss.filegen.util.AbstractDataWrapper;
 import eu.alpinweiss.filegen.util.FieldGenerator;
 import eu.alpinweiss.filegen.util.ValueVault;
 import org.apache.logging.log4j.LogManager;
@@ -38,6 +40,7 @@ public class DateRangeGenerator implements FieldGenerator {
 
 	public static final String EMPTY = "";
 	private final FieldDefinition fieldDefinition;
+	private List<Date> dates;
 
 	private final static Logger LOGGER = LogManager.getLogger(DateRangeGenerator.class);
 
@@ -50,13 +53,13 @@ public class DateRangeGenerator implements FieldGenerator {
 		synchronized (this) {
 			String pattern = fieldDefinition.getPattern();
 			if (pattern == null || EMPTY.equals(pattern)) {
-				valueVault.storeValue(EMPTY);
+				valueVault.storeValue(new DateRangeDataWrapper());
 				return;
 			}
 
 			String[] split = pattern.split(":");
 			if (split.length == 1) {
-				valueVault.storeValue(pattern);
+				valueVault.storeValue(new DateRangeDataWrapper());
 				return;
 			}
 			try {
@@ -65,25 +68,46 @@ public class DateRangeGenerator implements FieldGenerator {
 				Date min = dateFormat.parse(split[1]);
 				Date max = dateFormat.parse(split[2]);
 
-				List<Date> dates = new ArrayList<>();
+				if (dates == null) {
+					dates = new ArrayList<>();
 
-				Calendar c = Calendar.getInstance();
-				int counter = 1;
-				while (true) {
-					c.setTime(min);
-					c.add(Calendar.DATE, counter++);
-					Date date = c.getTime();
-					dates.add(date);
-					if (date.equals(max)) {
-						break;
+					Calendar c = Calendar.getInstance();
+					int counter = 1;
+					while (true) {
+						c.setTime(min);
+						c.add(Calendar.DATE, counter++);
+						Date date = c.getTime();
+						dates.add(date);
+						if (date.equals(max)) {
+							break;
+						}
 					}
 				}
 
-				int index = ThreadLocalRandom.current().nextInt(0, dates.size());
-				valueVault.storeValue(dateFormat.format(dates.get(index)));
+				final int index = ThreadLocalRandom.current().nextInt(0, dates.size());
+				valueVault.storeValue(new DateRangeDataWrapper() {
+					@Override
+					public Date getDateValue() {
+						return dates.get(index);
+					}
+				});
 			} catch (ParseException e) {
 				LOGGER.error(e.getMessage(), e);
 			}
 		}
 	}
+
+	private class DateRangeDataWrapper extends AbstractDataWrapper {
+
+		@Override
+		public FieldType getFieldType() {
+			return FieldType.DATE;
+		}
+
+		@Override
+		public Date getDateValue() {
+			return null;
+		}
+	}
+
 }

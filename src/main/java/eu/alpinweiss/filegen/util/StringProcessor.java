@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ThreadLocalRandom;
 
+import eu.alpinweiss.filegen.model.FieldType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -79,8 +80,8 @@ public class StringProcessor implements Runnable {
 
 		            input2TableInfo.generator().generate((int)i, randomGenerator, new ValueVault() {
 			            @Override
-			            public void storeValue(String value) {
-				            builder.append(value).append(" ");
+			            public void storeValue(DataWrapper value) {
+				            builder.append(value.getStringValue()).append(" ");
 			            }
 		            });
 	            }

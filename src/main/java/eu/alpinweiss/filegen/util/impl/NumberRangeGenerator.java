@@ -16,6 +16,8 @@
 package eu.alpinweiss.filegen.util.impl;
 
 import eu.alpinweiss.filegen.model.FieldDefinition;
+import eu.alpinweiss.filegen.model.FieldType;
+import eu.alpinweiss.filegen.util.AbstractDataWrapper;
 import eu.alpinweiss.filegen.util.FieldGenerator;
 import eu.alpinweiss.filegen.util.ValueVault;
 
@@ -40,25 +42,42 @@ public class NumberRangeGenerator implements FieldGenerator {
 	@Override
 	public void generate(int iterationNo, ThreadLocalRandom randomGenerator, ValueVault valueVault) {
 		synchronized (this) {
-			String pattern = fieldDefinition.getPattern();
+			final String pattern = fieldDefinition.getPattern();
 			if (pattern == null || EMPTY.equals(pattern)) {
-				valueVault.storeValue(EMPTY);
+				valueVault.storeValue(new NumberRangeDataWrapper());
 				return;
 			}
 
 			String[] split = pattern.split(":");
 			if (split.length == 1) {
-				valueVault.storeValue(pattern);
+				valueVault.storeValue(new NumberRangeDataWrapper() {
+					@Override
+					public Double getNumberValue() {
+						return Double.valueOf(pattern);
+					}
+				});
 				return;
 			}
 			int min = Integer.parseInt(split[0]);
 			int max = Integer.parseInt(split[1]);
-			List<Integer> integers = new ArrayList<>();
+			final List<Integer> integers = new ArrayList<>();
 			for (int i = min; i < max; i++) {
 				integers.add(i);
 			}
-			int index = ThreadLocalRandom.current().nextInt(0, integers.size());
-			valueVault.storeValue(integers.get(index).toString());
+			final int index = ThreadLocalRandom.current().nextInt(0, integers.size());
+			valueVault.storeValue(new NumberRangeDataWrapper() {
+				@Override
+				public Double getNumberValue() {
+					return Double.valueOf(integers.get(index).toString());
+				}
+			});
+		}
+	}
+
+	private class NumberRangeDataWrapper extends AbstractDataWrapper {
+		@Override
+		public FieldType getFieldType() {
+			return FieldType.INTEGER;
 		}
 	}
 }

@@ -17,6 +17,9 @@ package eu.alpinweiss.filegen.util.impl;
 
 import com.mifmif.common.regex.Generex;
 import eu.alpinweiss.filegen.model.FieldDefinition;
+import eu.alpinweiss.filegen.model.FieldType;
+import eu.alpinweiss.filegen.model.Generate;
+import eu.alpinweiss.filegen.util.AbstractDataWrapper;
 import eu.alpinweiss.filegen.util.FieldGenerator;
 import eu.alpinweiss.filegen.util.ValueVault;
 
@@ -30,15 +33,38 @@ import java.util.concurrent.ThreadLocalRandom;
 public class StringGenerator implements FieldGenerator {
 
 	private final Generex generex;
+	private final FieldDefinition fieldDefinition;
 
 	public StringGenerator(FieldDefinition fieldDefinition) {
 		this.generex = new Generex(fieldDefinition.getPattern());
+		this.fieldDefinition = fieldDefinition;
 	}
 
 	@Override
 	public void generate(int iterationNo, ThreadLocalRandom randomGenerator, ValueVault valueVault) {
 		synchronized (this) {
-			valueVault.storeValue(generex.random());
+			if (Generate.Y.equals(fieldDefinition.getGenerate())) {
+				valueVault.storeValue(new StringDataWrapper() {
+					@Override
+					public String getStringValue() {
+						return generex.random();
+					}
+				});
+			} else {
+				valueVault.storeValue(new StringDataWrapper() {
+					@Override
+					public String getStringValue() {
+						return fieldDefinition.getPattern();
+					}
+				});
+			}
+		}
+	}
+
+	private class StringDataWrapper extends AbstractDataWrapper {
+		@Override
+		public FieldType getFieldType() {
+			return FieldType.STRING;
 		}
 	}
 }

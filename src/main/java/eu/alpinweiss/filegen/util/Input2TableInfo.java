@@ -19,6 +19,9 @@ import eu.alpinweiss.filegen.model.FieldDefinition;
 import eu.alpinweiss.filegen.model.FieldType;
 import eu.alpinweiss.filegen.model.Generate;
 import eu.alpinweiss.filegen.util.impl.*;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.DataFormat;
+import org.apache.poi.ss.usermodel.Workbook;
 
 /**
  * {@link Input2TableInfo}.
@@ -27,59 +30,68 @@ import eu.alpinweiss.filegen.util.impl.*;
  */
 public class Input2TableInfo {
 
-    String fieldText = null;
-    FieldDefinition fieldDefinition;
+	String fieldText = null;
+	FieldDefinition fieldDefinition;
 	FieldGenerator fieldGenerator;
+	CellStyle cellStyle;
 
-    public String getFieldText() {
-        return fieldText;
-    }
+	public String getFieldText() {
+		return fieldText;
+	}
 
-    public void setFieldText(String fieldText) {
-        this.fieldText = fieldText;
-    }
+	public void setFieldText(String fieldText) {
+		this.fieldText = fieldText;
+	}
 
-    public FieldDefinition getFieldDefinition() {
-        return fieldDefinition;
-    }
+	public FieldDefinition getFieldDefinition() {
+		return fieldDefinition;
+	}
 
-    public void setFieldDefinition(FieldDefinition fieldDefinition) {
-        this.fieldDefinition = fieldDefinition;
-    }
+	public void setFieldDefinition(FieldDefinition fieldDefinition) {
+		this.fieldDefinition = fieldDefinition;
+	}
 
 	public FieldGenerator generator() {
 		return fieldGenerator;
 	}
 
 	public void initGenerator() {
-		Generate generate = fieldDefinition.getGenerate();
-		if (Generate.Y.equals(generate)) {
-			FieldType type = fieldDefinition.getType();
-			switch (type) {
-				case FLOAT:
-					this.fieldGenerator = new FloatGenerator(fieldDefinition);
-					break;
-				case STRING:
-					this.fieldGenerator = new StringGenerator(fieldDefinition);
-					break;
-				case INTEGER:
-					this.fieldGenerator = new IntegerGenerator(fieldDefinition);
-					break;
-				case DATE:
-					this.fieldGenerator = new DateGenerator(fieldDefinition);
-					break;
-				case RANGE:
-					this.fieldGenerator = new RangeGenerator(fieldDefinition);
-					break;
-				case NUMBERRANGE:
-					this.fieldGenerator = new NumberRangeGenerator(fieldDefinition);
-					break;
-				case DATERANGE:
-					this.fieldGenerator = new DateRangeGenerator(fieldDefinition);
-					break;
-			}
-		} else {
-			this.fieldGenerator = new PassThroughGenerator(fieldDefinition);
+		FieldType type = fieldDefinition.getType();
+		switch (type) {
+			case FLOAT:
+				this.fieldGenerator = new FloatGenerator(fieldDefinition);
+				break;
+			case STRING:
+				this.fieldGenerator = new StringGenerator(fieldDefinition);
+				break;
+			case INTEGER:
+				this.fieldGenerator = new IntegerGenerator(fieldDefinition);
+				break;
+			case DATE:
+				this.fieldGenerator = new DateGenerator(fieldDefinition);
+				break;
+			case RANGE:
+				this.fieldGenerator = new RangeGenerator(fieldDefinition);
+				break;
+			case NUMBERRANGE:
+				this.fieldGenerator = new NumberRangeGenerator(fieldDefinition);
+				break;
+			case DATERANGE:
+				this.fieldGenerator = new DateRangeGenerator(fieldDefinition);
+				break;
 		}
+	}
+
+	public void initCellStyle(Workbook wb) {
+		FieldType type = fieldDefinition.getType();
+		if (FieldType.DATE.equals(type)) {
+			DataFormat dataFormat = wb.createDataFormat();
+			cellStyle = wb.createCellStyle();
+			cellStyle.setDataFormat(dataFormat.getFormat("dd/mm/yyyy"));
+		}
+	}
+
+	public CellStyle getCellStyle() {
+		return cellStyle;
 	}
 }
