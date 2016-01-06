@@ -13,27 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.alpinweiss.filegen.command.steps.impl;
-
-import com.google.inject.Inject;
-import eu.alpinweiss.filegen.command.steps.AppVersionStep;
-import eu.alpinweiss.filegen.model.Model;
-import eu.alpinweiss.filegen.service.OutputWriterHolder;
+package eu.alpinweiss.filegen.util;
 
 /**
- * {@link AppVersionStepImpl}.
+ * {@link DefaultOutputWriter}.
  *
  * @author Aleksandrs.Severgins | <a href="http://alpinweiss.eu">SIA Alpinweiss</a>
  */
-public class AppVersionStepImpl implements AppVersionStep {
+public class DefaultOutputWriter implements OutputWriter {
 
-    public static final String VERSION = "1";
+	@Override
+	public void writeValueInLine(String value) {
+		System.out.println(value);
+	}
 
-	@Inject
-	private OutputWriterHolder outputWriterHolder;
-
-    @Override
-    public void execute(Model model) {
-	    outputWriterHolder.writeValueInLine("filegen  v" + VERSION);
-    }
+	@Override
+	public void writeValue(String value) {
+		System.out.print(value);
+	}
 }

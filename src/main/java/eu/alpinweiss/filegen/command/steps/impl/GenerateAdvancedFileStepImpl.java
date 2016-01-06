@@ -15,8 +15,10 @@
  */
 package eu.alpinweiss.filegen.command.steps.impl;
 
+import com.google.inject.Inject;
 import eu.alpinweiss.filegen.command.steps.GenerateAdvancedFileStep;
 import eu.alpinweiss.filegen.model.Model;
+import eu.alpinweiss.filegen.service.OutputWriterHolder;
 
 /**
  * {@link GenerateSimpleFileStepImpl}.
@@ -25,8 +27,11 @@ import eu.alpinweiss.filegen.model.Model;
  */
 public class GenerateAdvancedFileStepImpl implements GenerateAdvancedFileStep {
 
+	@Inject
+	private OutputWriterHolder outputWriterHolder;
+
     @Override
     public void execute(Model model) {
-	    System.out.println("will be implemented soon");
+	    outputWriterHolder.writeValueInLine("will be implemented soon");
     }
 }

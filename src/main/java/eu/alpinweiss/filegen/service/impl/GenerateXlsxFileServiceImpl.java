@@ -15,8 +15,10 @@
  */
 package eu.alpinweiss.filegen.service.impl;
 
+import com.google.inject.Inject;
 import eu.alpinweiss.filegen.model.FieldDefinition;
 import eu.alpinweiss.filegen.service.GenerateXlsxFileService;
+import eu.alpinweiss.filegen.service.OutputWriterHolder;
 import eu.alpinweiss.filegen.util.Input2TableInfo;
 import eu.alpinweiss.filegen.util.SheetProcessor;
 import org.apache.logging.log4j.LogManager;
@@ -44,11 +46,14 @@ public class GenerateXlsxFileServiceImpl implements GenerateXlsxFileService {
 
 	private final static Logger LOGGER = LogManager.getLogger(GenerateXlsxFileServiceImpl.class);
 
+	@Inject
+	private OutputWriterHolder outputWriterHolder;
+
 	public void generateExcel(String excelFilename, long rowCount, List<FieldDefinition> fieldDefinitionList, int sheetCount) {
 
 		long startTime = new Date().getTime();
 
-		System.out.println("Excel data generation started");
+		outputWriterHolder.writeValueInLine("Excel data generation started");
 
 		//New Workbook
 		Workbook wb = new SXSSFWorkbook();
@@ -87,12 +92,12 @@ public class GenerateXlsxFileServiceImpl implements GenerateXlsxFileService {
 
 				doneSignal = new CountDownLatch(sheetCount);
 
-				SheetProcessor stringProcessorSheet1 = new SheetProcessor(rowCount, startSignal, doneSignal, cs, sheet1, columnCount, input2TableInfoMap);
+				SheetProcessor stringProcessorSheet1 = new SheetProcessor(rowCount, startSignal, doneSignal, cs, sheet1, columnCount, input2TableInfoMap, outputWriterHolder);
 				new Thread(stringProcessorSheet1, "Processor-" + sheetCount).start();
 
 				for (int i = 0; i < sheetCount-1; i++) {
 					SXSSFSheet sheet = (SXSSFSheet) wb.createSheet("dataSheet_" + i);
-					SheetProcessor stringProcessor = new SheetProcessor(rowCount, startSignal, doneSignal, cs, sheet, columnCount, input2TableInfoMap);
+					SheetProcessor stringProcessor = new SheetProcessor(rowCount, startSignal, doneSignal, cs, sheet, columnCount, input2TableInfoMap, outputWriterHolder);
 					new Thread(stringProcessor, "Processor-" + i).start();
 				}
 
@@ -103,10 +108,10 @@ public class GenerateXlsxFileServiceImpl implements GenerateXlsxFileService {
 			}
 
 
-			System.out.println("Excel data generation finished.");
+			outputWriterHolder.writeValueInLine("Excel data generation finished.");
 			long generationTime = new Date().getTime();
-			System.out.println("Time used " + ((generationTime - startTime) / 1000) + " sec");
-			System.out.println("Writing to file.");
+			outputWriterHolder.writeValueInLine("Time used " + ((generationTime - startTime) / 1000) + " sec");
+			outputWriterHolder.writeValueInLine("Writing to file.");
 
 			FileOutputStream fileOut = new FileOutputStream(excelFilename.trim());
 
@@ -114,9 +119,9 @@ public class GenerateXlsxFileServiceImpl implements GenerateXlsxFileService {
 			fileOut.close();
 
 			long writeTime = new Date().getTime();
-			System.out.println("Time used " + ((writeTime - generationTime) / 1000) + " sec");
-			System.out.println("Total time used " + ((writeTime - startTime) / 1000) + " sec");
-			System.out.println("Done");
+			outputWriterHolder.writeValueInLine("Time used " + ((writeTime - generationTime) / 1000) + " sec");
+			outputWriterHolder.writeValueInLine("Total time used " + ((writeTime - startTime) / 1000) + " sec");
+			outputWriterHolder.writeValueInLine("Done");
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 		} finally {

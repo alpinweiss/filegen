@@ -20,14 +20,8 @@ import eu.alpinweiss.filegen.command.runner.CommandRunner;
 import eu.alpinweiss.filegen.command.runner.CommandRunnerImpl;
 import eu.alpinweiss.filegen.command.steps.*;
 import eu.alpinweiss.filegen.command.steps.impl.*;
-import eu.alpinweiss.filegen.service.FdrService;
-import eu.alpinweiss.filegen.service.GenerateAdvancedFileService;
-import eu.alpinweiss.filegen.service.GenerateXlsxFileService;
-import eu.alpinweiss.filegen.service.XmlConfigParser;
-import eu.alpinweiss.filegen.service.impl.FdrServiceImpl;
-import eu.alpinweiss.filegen.service.impl.GenerateAdvancedFileServiceImpl;
-import eu.alpinweiss.filegen.service.impl.GenerateXlsxFileServiceImpl;
-import eu.alpinweiss.filegen.service.impl.XmlConfigParserImpl;
+import eu.alpinweiss.filegen.service.*;
+import eu.alpinweiss.filegen.service.impl.*;
 
 /**
  * {@link FdrModule}.
@@ -50,6 +44,7 @@ public class FdrModule extends AbstractModule {
         bind(GenerateXlsxFileService.class).to(GenerateXlsxFileServiceImpl.class);
         bind(XmlConfigParser.class).to(XmlConfigParserImpl.class);
         bind(ReadInputParametersStep.class).to(ReadInputParametersStepImpl.class);
+        bind(OutputWriterHolder.class).to(OutputWriterHolderImpl.class);
 	}
 
 }

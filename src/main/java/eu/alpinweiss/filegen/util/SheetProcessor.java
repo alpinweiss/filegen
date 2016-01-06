@@ -16,6 +16,7 @@
 package eu.alpinweiss.filegen.util;
 
 import eu.alpinweiss.filegen.model.FieldType;
+import eu.alpinweiss.filegen.service.OutputWriterHolder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
@@ -43,9 +44,10 @@ public class SheetProcessor implements Runnable {
 	private SXSSFSheet sheet;
 	private int columnCount;
 	private Map<Integer, Input2TableInfo> input2TableInfoMap;
+	private OutputWriterHolder outputWriterHolder;
 
 	public SheetProcessor(long rowCount, CountDownLatch startSignal, CountDownLatch doneSignal, CellStyle cs, SXSSFSheet sheet,
-	                      int columnCount, Map<Integer, Input2TableInfo> input2TableInfoMap) {
+	                      int columnCount, Map<Integer, Input2TableInfo> input2TableInfoMap, OutputWriterHolder outputWriterHolder) {
 		this.rowCount = rowCount;
 		this.startSignal = startSignal;
 		this.doneSignal = doneSignal;
@@ -53,6 +55,7 @@ public class SheetProcessor implements Runnable {
 		this.sheet = sheet;
 		this.columnCount = columnCount;
 		this.input2TableInfoMap = input2TableInfoMap;
+		this.outputWriterHolder = outputWriterHolder;
 	}
 
 	public SheetProcessor() {
@@ -94,7 +97,7 @@ public class SheetProcessor implements Runnable {
 
 			row = sheet.createRow(i);
 			if (i != 0 &&  i % 10000 == 0) {
-				System.out.println(Thread.currentThread().getName() + " Processed " + i + " rows");
+				outputWriterHolder.writeValueInLine(Thread.currentThread().getName() + " Processed " + i + " rows");
 			}
 			for (int colCount = 0; colCount < columnCount; colCount++) {
 

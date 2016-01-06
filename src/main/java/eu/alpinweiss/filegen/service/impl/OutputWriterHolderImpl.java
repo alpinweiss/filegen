@@ -13,27 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.alpinweiss.filegen.command.steps.impl;
+package eu.alpinweiss.filegen.service.impl;
 
-import com.google.inject.Inject;
-import eu.alpinweiss.filegen.command.steps.AppVersionStep;
-import eu.alpinweiss.filegen.model.Model;
+import com.google.inject.Singleton;
 import eu.alpinweiss.filegen.service.OutputWriterHolder;
+import eu.alpinweiss.filegen.util.DefaultOutputWriter;
+import eu.alpinweiss.filegen.util.OutputWriter;
 
 /**
- * {@link AppVersionStepImpl}.
+ * {@link OutputWriterHolderImpl}.
  *
  * @author Aleksandrs.Severgins | <a href="http://alpinweiss.eu">SIA Alpinweiss</a>
  */
-public class AppVersionStepImpl implements AppVersionStep {
+@Singleton
+public class OutputWriterHolderImpl implements OutputWriterHolder {
 
-    public static final String VERSION = "1";
+	private OutputWriter outputWriter;
 
-	@Inject
-	private OutputWriterHolder outputWriterHolder;
+	public OutputWriterHolderImpl() {
+		this.outputWriter = new DefaultOutputWriter();
+	}
 
-    @Override
-    public void execute(Model model) {
-	    outputWriterHolder.writeValueInLine("filegen  v" + VERSION);
-    }
+	@Override
+	public void setOutputWriter(OutputWriter outputWriter) {
+		this.outputWriter = outputWriter;
+	}
+
+	@Override
+	public void writeValueInLine(String value) {
+		outputWriter.writeValueInLine(value);
+	}
+
+	@Override
+	public void writeValue(String value) {
+		outputWriter.writeValue(value);
+	}
 }

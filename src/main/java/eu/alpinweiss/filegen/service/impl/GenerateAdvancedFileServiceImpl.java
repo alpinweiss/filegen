@@ -15,9 +15,11 @@
  */
 package eu.alpinweiss.filegen.service.impl;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import eu.alpinweiss.filegen.model.FieldDefinition;
 import eu.alpinweiss.filegen.service.GenerateAdvancedFileService;
+import eu.alpinweiss.filegen.service.OutputWriterHolder;
 import eu.alpinweiss.filegen.util.Input2TableInfo;
 import eu.alpinweiss.filegen.util.StringProcessor;
 import org.apache.logging.log4j.LogManager;
@@ -40,6 +42,9 @@ public class GenerateAdvancedFileServiceImpl implements GenerateAdvancedFileServ
 
     private final static Logger LOGGER = LogManager.getLogger(GenerateAdvancedFileServiceImpl.class);
     public static final int THREAD_COUNT = 10;
+
+	@Inject
+	private OutputWriterHolder outputWriterHolder;
 
     @Override
     public void generateFile(String filename, long rowCount, List<FieldDefinition> fieldDefinitionList) {
@@ -73,7 +78,7 @@ public class GenerateAdvancedFileServiceImpl implements GenerateAdvancedFileServ
 
 
             for (int i = 0; i < THREAD_COUNT; i++) {
-                StringProcessor stringProcessor = new StringProcessor(iterationCount, startSignal, doneSignal, fw, columnCount, tableInfoHashMap);
+                StringProcessor stringProcessor = new StringProcessor(iterationCount, startSignal, doneSignal, fw, columnCount, tableInfoHashMap, outputWriterHolder);
                 if (i == 0) {
                     stringProcessor.addIterationCount(iterationMod);
                 }
@@ -88,8 +93,8 @@ public class GenerateAdvancedFileServiceImpl implements GenerateAdvancedFileServ
             LOGGER.error(e.getMessage(), e);
         }
 
-        System.out.println("Done");
-        System.out.println("Time used " + ((new Date().getTime() - startTime) / 1000) + " sec");
+	    outputWriterHolder.writeValueInLine("Done");
+	    outputWriterHolder.writeValueInLine("Time used " + ((new Date().getTime() - startTime) / 1000) + " sec");
     }
 
 }

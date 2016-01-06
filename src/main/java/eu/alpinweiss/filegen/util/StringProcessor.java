@@ -24,6 +24,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ThreadLocalRandom;
 
 import eu.alpinweiss.filegen.model.FieldType;
+import eu.alpinweiss.filegen.service.OutputWriterHolder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,15 +45,17 @@ public class StringProcessor implements Runnable {
     private final FileWriter fw;
 	private final int columnCount;
 	private final Map<Integer, Input2TableInfo> input2TableInfoMap;
+	private OutputWriterHolder outputWriterHolder;
 
 	public StringProcessor(long rowCount, CountDownLatch startSignal, CountDownLatch doneSignal, FileWriter fw,
-	                       int columnCount, Map<Integer, Input2TableInfo> input2TableInfoMap) {
+	                       int columnCount, Map<Integer, Input2TableInfo> input2TableInfoMap, OutputWriterHolder outputWriterHolder) {
         this.rowCount = rowCount;
         this.startSignal = startSignal;
         this.doneSignal = doneSignal;
         this.fw = fw;
 		this.columnCount = columnCount;
 		this.input2TableInfoMap = input2TableInfoMap;
+		this.outputWriterHolder = outputWriterHolder;
 	}
 
     @Override
@@ -60,12 +63,12 @@ public class StringProcessor implements Runnable {
         try {
             startSignal.await();
             ThreadLocalRandom randomGenerator = ThreadLocalRandom.current();
-            System.out.println(Thread.currentThread().getName() + " starts generating " + rowCount + " rows");
+	        outputWriterHolder.writeValueInLine(Thread.currentThread().getName() + " starts generating " + rowCount + " rows");
 
             for (long i = 0; i < rowCount; i++) {
                 if (i != 0 && i % 10000 == 0) {
                     synchronized (fw) {
-                        System.out.println(Thread.currentThread().getName() + " writes next " + i + " rows");
+	                    outputWriterHolder.writeValueInLine(Thread.currentThread().getName() + " writes next " + i + " rows");
                         for (String row : stringList) {
                             fw.write(row);
                         }
@@ -90,7 +93,7 @@ public class StringProcessor implements Runnable {
                 stringList.add(builder.toString());
             }
             synchronized (fw) {
-                System.out.println(Thread.currentThread().getName() + " writes last " + stringList.size() + " rows");
+	            outputWriterHolder.writeValueInLine(Thread.currentThread().getName() + " writes last " + stringList.size() + " rows");
                 for (String row : stringList) {
                     fw.write(row);
                 }

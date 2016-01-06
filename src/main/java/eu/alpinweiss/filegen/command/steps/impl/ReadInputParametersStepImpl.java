@@ -23,8 +23,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.inject.Inject;
 import eu.alpinweiss.filegen.model.FieldType;
 import eu.alpinweiss.filegen.model.Generate;
+import eu.alpinweiss.filegen.service.OutputWriterHolder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
@@ -46,6 +48,9 @@ public class ReadInputParametersStepImpl implements ReadInputParametersStep {
 
 	private final static Logger LOGGER = LogManager.getLogger(ReadInputParametersStepImpl.class);
 
+	@Inject
+	private OutputWriterHolder outputWriterHolder;
+
 	@Override
 	public void execute(Model model) {
 		String parameter = model.getParameter(INPUT_PARAMETER);
@@ -62,7 +67,7 @@ public class ReadInputParametersStepImpl implements ReadInputParametersStep {
             String outputFileName = readOutputFileName(sheet);
 			int sheetCount = readSheetCount(sheet);
 
-			System.out.println("Iterations: " + iterationCount + " lineSeparator: " + lineSeparator);
+			outputWriterHolder.writeValueInLine("Iterations: " + iterationCount + " lineSeparator: " + lineSeparator);
             List<Object[]> fields = new ArrayList<>(sheet.getLastRowNum()-4);
 
 			for (int i = 5; i <= sheet.getLastRowNum(); i++) {
@@ -112,7 +117,7 @@ public class ReadInputParametersStepImpl implements ReadInputParametersStep {
             model.setOutputFileName(outputFileName);
 			model.setSheetCount(sheetCount);
 
-            System.out.println("");
+			outputWriterHolder.writeValueInLine("");
             
             workbook.close();
 
