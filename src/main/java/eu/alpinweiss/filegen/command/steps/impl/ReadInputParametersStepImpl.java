@@ -115,7 +115,7 @@ public class ReadInputParametersStepImpl implements ReadInputParametersStep {
             model.setRowCount(iterationCount);
             model.setLineSeparator(lineSeparator);
             model.setOutputFileName(outputFileName);
-			model.setSheetCount(sheetCount);
+			model.setDataStorageCount(sheetCount);
 
 			outputWriterHolder.writeValueInLine("");
             

@@ -34,7 +34,7 @@ public class Model {
     private long rowCount;
     private String lineSeparator;
     private String outputFileName;
-	private int sheetCount;
+	private int dataStorageCount;
 
 	public Map<String, String> getParametersMap() {
 		return parametersMap;
@@ -88,11 +88,11 @@ public class Model {
         return outputFileName;
     }
 
-	public void setSheetCount(int sheetCount) {
-		this.sheetCount = sheetCount;
+	public void setDataStorageCount(int dataStorageCount) {
+		this.dataStorageCount = dataStorageCount;
 	}
 
-	public int getSheetCount() {
-		return sheetCount;
+	public int getDataStorageCount() {
+		return dataStorageCount;
 	}
 }

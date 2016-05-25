@@ -40,6 +40,14 @@
         <paramCount>1</paramCount>
         <requiredParams>0</requiredParams>
 	</step>
+    <step>
+		<command>m</command>
+		<className>eu.alpinweiss.filegen.command.steps.GenerateAccessFileStep</className>
+		<description>Generate Access file</description>
+		<required>false</required>
+        <paramCount>1</paramCount>
+        <requiredParams>0</requiredParams>
+	</step>
 	<step>
 		<command>i</command>
 		<className>eu.alpinweiss.filegen.command.steps.ReadInputParametersStep</className>

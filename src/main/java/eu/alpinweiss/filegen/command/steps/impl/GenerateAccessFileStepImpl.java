@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Alexander Severgin
+ * Copyright 2016 Alexander Severgin
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,24 +16,25 @@
 package eu.alpinweiss.filegen.command.steps.impl;
 
 import com.google.inject.Inject;
-import eu.alpinweiss.filegen.command.steps.GenerateExcelXlsxFileStep;
+import eu.alpinweiss.filegen.command.steps.GenerateAccessFileStep;
 import eu.alpinweiss.filegen.model.Model;
-import eu.alpinweiss.filegen.service.GenerateXlsxFileService;
+import eu.alpinweiss.filegen.service.GenerateAccessFileService;
 
 /**
- * {@link GenerateExcelXlsxFileStepImpl}.
+ * {@link GenerateAccessFileStepImpl}.
  *
  * @author Aleksandrs.Severgins | <a href="http://alpinweiss.eu">SIA Alpinweiss</a>
  */
-public class GenerateExcelXlsxFileStepImpl implements GenerateExcelXlsxFileStep {
+public class GenerateAccessFileStepImpl implements GenerateAccessFileStep {
 
 	@Inject
-	private GenerateXlsxFileService generateXlsxFileService;
+	private GenerateAccessFileService generateAccessFileService;
 
-    @Override
-    public void execute(Model model) {
-        String outputFileName = model.getOutputFileName();
-	    generateXlsxFileService.generateExcel(outputFileName, model.getRowCount(), model.getFieldDefinitionList(), model.getDataStorageCount());
-        model.getFieldDefinitionList().clear();
-    }
+	@Override
+	public void execute(Model model) {
+		String outputFileName = model.getOutputFileName();
+		generateAccessFileService.generateAccess(outputFileName, model.getRowCount(), model.getFieldDefinitionList(), model.getDataStorageCount());
+		model.getFieldDefinitionList().clear();
+	}
+
 }

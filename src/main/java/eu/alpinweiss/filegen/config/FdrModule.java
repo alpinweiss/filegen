@@ -44,7 +44,9 @@ public class FdrModule extends AbstractModule {
         bind(GenerateXlsxFileService.class).to(GenerateXlsxFileServiceImpl.class);
         bind(XmlConfigParser.class).to(XmlConfigParserImpl.class);
         bind(ReadInputParametersStep.class).to(ReadInputParametersStepImpl.class);
+        bind(GenerateAccessFileStep.class).to(GenerateAccessFileStepImpl.class);
         bind(OutputWriterHolder.class).to(OutputWriterHolderImpl.class);
+        bind(GenerateAccessFileService.class).to(GenerateAccessFileServiceImpl.class);
 	}
 
 }
