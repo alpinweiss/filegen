@@ -27,6 +27,6 @@ import java.util.List;
  */
 public interface GenerateAdvancedFileService {
 
-    void generateFile(String filename, long rowCount, List<FieldDefinition> fieldDefinitionList);
+    void generateFile(String filename, int rowCount, List<FieldDefinition> fieldDefinitionList);
 
 }

@@ -24,6 +24,8 @@ import eu.alpinweiss.filegen.service.GenerateAccessFileService;
 import eu.alpinweiss.filegen.service.OutputWriterHolder;
 import eu.alpinweiss.filegen.util.Input2TableInfo;
 import eu.alpinweiss.filegen.util.TableProcessor;
+import eu.alpinweiss.filegen.util.vault.ParameterVault;
+import eu.alpinweiss.filegen.util.vault.impl.DefaultParameterVault;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -47,7 +49,7 @@ public class GenerateAccessFileServiceImpl implements GenerateAccessFileService 
 	private OutputWriterHolder outputWriterHolder;
 
 	@Override
-	public void generateAccess(String accessFilename, long rowCount, List<FieldDefinition> fieldDefinitionList, int tableCount) {
+	public void generateAccess(String accessFilename, int rowCount, List<FieldDefinition> fieldDefinitionList, int tableCount) {
 
 		long startTime = new Date().getTime();
 
@@ -88,11 +90,13 @@ public class GenerateAccessFileServiceImpl implements GenerateAccessFileService 
 
 				doneSignal = new CountDownLatch(tableCount);
 
-				TableProcessor tableProcessor1 = new TableProcessor(rowCount, startSignal, doneSignal, tableListForGeneration.get(0), columnCount, input2TableInfoMap, outputWriterHolder, tableToGeneratedData);
+				ParameterVault parameterVault = new DefaultParameterVault(0, rowCount);
+				TableProcessor tableProcessor1 = new TableProcessor(parameterVault, startSignal, doneSignal, tableListForGeneration.get(0), columnCount, input2TableInfoMap, outputWriterHolder, tableToGeneratedData);
 				new Thread(tableProcessor1, "Processor-" + tableCount).start();
 
 				for (int i = 1; i < tableCount; i++) {
-					TableProcessor tableProcessor = new TableProcessor(rowCount, startSignal, doneSignal,tableListForGeneration.get(i), columnCount, input2TableInfoMap, outputWriterHolder, tableToGeneratedData);
+					ParameterVault parameterVaultRest = new DefaultParameterVault(i, rowCount);
+					TableProcessor tableProcessor = new TableProcessor(parameterVaultRest, startSignal, doneSignal,tableListForGeneration.get(i), columnCount, input2TableInfoMap, outputWriterHolder, tableToGeneratedData);
 					new Thread(tableProcessor, "Processor-" + i).start();
 				}
 
@@ -104,7 +108,8 @@ public class GenerateAccessFileServiceImpl implements GenerateAccessFileService 
 					Input2TableInfo input2TableInfo = input2TableInfoMap.get(key);
 					tableBuilder.addColumn(new ColumnBuilder(input2TableInfo.getFieldText()).setSQLType(getType(input2TableInfo.getFieldDefinition().getType())));
 				}
-				new TableProcessor().generateTableData(rowCount, tableBuilder.toTable(db), columnCount, input2TableInfoMap, tableToGeneratedData);
+				ParameterVault parameterVault = new DefaultParameterVault(0, rowCount);
+				new TableProcessor().generateTableData(parameterVault, tableBuilder.toTable(db), columnCount, input2TableInfoMap, tableToGeneratedData);
 			}
 
 

@@ -27,6 +27,6 @@ import java.util.List;
  */
 public interface GenerateXlsxFileService {
 
-	void generateExcel(String excelFilename, long rowCount, List<FieldDefinition> fieldDefinitionList, int sheetCount);
+	void generateExcel(String excelFilename, int rowCount, List<FieldDefinition> fieldDefinitionList, int sheetCount);
 
 }

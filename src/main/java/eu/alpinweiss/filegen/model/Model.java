@@ -31,7 +31,7 @@ public class Model {
 
 	private final Map<String, String> parametersMap = new HashMap<>();
 	private final Set<CommandStep> commands = new LinkedHashSet<>();
-    private long rowCount;
+    private int rowCount;
     private String lineSeparator;
     private String outputFileName;
 	private int dataStorageCount;
@@ -64,11 +64,11 @@ public class Model {
         this.fieldDefinitionList = fieldDefinitionList;
     }
 
-    public void setRowCount(long rowCount) {
+    public void setRowCount(int rowCount) {
         this.rowCount = rowCount;
     }
 
-    public long getRowCount() {
+    public int getRowCount() {
         return rowCount;
     }
 

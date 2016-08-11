@@ -17,6 +17,9 @@ package eu.alpinweiss.filegen.util;
 
 import eu.alpinweiss.filegen.model.FieldType;
 import eu.alpinweiss.filegen.service.OutputWriterHolder;
+import eu.alpinweiss.filegen.util.vault.ParameterVault;
+import eu.alpinweiss.filegen.util.vault.ValueVault;
+import eu.alpinweiss.filegen.util.vault.impl.DefaultParameterVault;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
@@ -37,7 +40,7 @@ public class SheetProcessor implements Runnable {
 
 	private final static Logger LOGGER = LogManager.getLogger(SheetProcessor.class);
 
-	private long rowCount;
+	private ParameterVault parameterVault;
 	private CountDownLatch startSignal;
 	private CountDownLatch doneSignal;
 	private CellStyle cs;
@@ -46,9 +49,9 @@ public class SheetProcessor implements Runnable {
 	private Map<Integer, Input2TableInfo> input2TableInfoMap;
 	private OutputWriterHolder outputWriterHolder;
 
-	public SheetProcessor(long rowCount, CountDownLatch startSignal, CountDownLatch doneSignal, CellStyle cs, SXSSFSheet sheet,
+	public SheetProcessor(ParameterVault parameterVault, CountDownLatch startSignal, CountDownLatch doneSignal, CellStyle cs, SXSSFSheet sheet,
 	                      int columnCount, Map<Integer, Input2TableInfo> input2TableInfoMap, OutputWriterHolder outputWriterHolder) {
-		this.rowCount = rowCount;
+		this.parameterVault = parameterVault;
 		this.startSignal = startSignal;
 		this.doneSignal = doneSignal;
 		this.cs = cs;
@@ -66,7 +69,7 @@ public class SheetProcessor implements Runnable {
 		try {
 			startSignal.await();
 
-			generateSheetData(rowCount, cs, sheet, columnCount, input2TableInfoMap);
+			generateSheetData(parameterVault, cs, sheet, columnCount, input2TableInfoMap);
 
 			doneSignal.countDown();
 		} catch (InterruptedException e) {
@@ -74,7 +77,7 @@ public class SheetProcessor implements Runnable {
 		}
 	}
 
-	public void generateSheetData(long rowCount, CellStyle cs, SXSSFSheet sheet, int columnCount, Map<Integer, Input2TableInfo> hashMap) {
+	public void generateSheetData(ParameterVault parameterVault, CellStyle cs, SXSSFSheet sheet, int columnCount, Map<Integer, Input2TableInfo> hashMap) {
 		Cell cell;// Row and column indexes
 		int idx = 0;
 		int idy = 0;
@@ -93,7 +96,7 @@ public class SheetProcessor implements Runnable {
 		}
 
 		ThreadLocalRandom randomGenerator = ThreadLocalRandom.current();
-		for (int i = 1; i < rowCount; i++) {
+		for (int i = 1; i < parameterVault.rowCount()+1; i++) {
 
 			row = sheet.createRow(i);
 			if (i != 0 &&  i % 10000 == 0) {
@@ -106,7 +109,7 @@ public class SheetProcessor implements Runnable {
 
 				final CellStyle cellStyle = input2TableInfo.getCellStyle();
 
-				input2TableInfo.generator().generate(i, randomGenerator, new ValueVault() {
+				input2TableInfo.generator().generate(parameterVault.setIterationNumber(i), randomGenerator, new ValueVault() {
 					@Override
 					public void storeValue(DataWrapper wrapper) {
 						FieldType fieldType = wrapper.getFieldType();
@@ -120,6 +123,9 @@ public class SheetProcessor implements Runnable {
 								dataCell.setCellType(Cell.CELL_TYPE_NUMERIC);
 								dataCell.setCellValue(wrapper.getNumberValue());
 								break;
+							case AUTONUMBER:
+								dataCell.setCellType(Cell.CELL_TYPE_NUMERIC);
+								dataCell.setCellValue(wrapper.getNumberValue());
 							default:
 								dataCell.setCellValue(wrapper.getStringValue());
 						}

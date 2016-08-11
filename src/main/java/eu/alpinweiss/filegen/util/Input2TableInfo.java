@@ -67,6 +67,9 @@ public class Input2TableInfo {
 			case INTEGER:
 				this.fieldGenerator = new IntegerGenerator(fieldDefinition);
 				break;
+			case AUTONUMBER:
+				this.fieldGenerator = new AutoNumberGenerator(fieldDefinition);
+				break;
 			case DATE:
 				this.fieldGenerator = new DateGenerator(fieldDefinition);
 				break;

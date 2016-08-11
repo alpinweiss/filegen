@@ -15,6 +15,9 @@
  */
 package eu.alpinweiss.filegen.util;
 
+import eu.alpinweiss.filegen.util.vault.ParameterVault;
+import eu.alpinweiss.filegen.util.vault.ValueVault;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -24,6 +27,6 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public interface FieldGenerator {
 
-	void generate(int iterationNo, ThreadLocalRandom randomGenerator, ValueVault valueVault);
+	void generate(ParameterVault parameterVault, ThreadLocalRandom randomGenerator, ValueVault valueVault);
 
 }

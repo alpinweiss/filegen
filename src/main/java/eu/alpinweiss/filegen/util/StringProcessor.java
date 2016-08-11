@@ -23,8 +23,10 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ThreadLocalRandom;
 
-import eu.alpinweiss.filegen.model.FieldType;
 import eu.alpinweiss.filegen.service.OutputWriterHolder;
+import eu.alpinweiss.filegen.util.vault.ParameterVault;
+import eu.alpinweiss.filegen.util.vault.ValueVault;
+import eu.alpinweiss.filegen.util.vault.impl.DefaultParameterVault;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -37,7 +39,7 @@ public class StringProcessor implements Runnable {
 
     private final static Logger LOGGER = LogManager.getLogger(StringProcessor.class);
 
-    private long rowCount;
+    private ParameterVault parameterVault;
 
     private final List<String> stringList = new ArrayList<>();
     private final CountDownLatch startSignal;
@@ -47,9 +49,9 @@ public class StringProcessor implements Runnable {
 	private final Map<Integer, Input2TableInfo> input2TableInfoMap;
 	private OutputWriterHolder outputWriterHolder;
 
-	public StringProcessor(long rowCount, CountDownLatch startSignal, CountDownLatch doneSignal, FileWriter fw,
+	public StringProcessor(ParameterVault parameterVault, CountDownLatch startSignal, CountDownLatch doneSignal, FileWriter fw,
 	                       int columnCount, Map<Integer, Input2TableInfo> input2TableInfoMap, OutputWriterHolder outputWriterHolder) {
-        this.rowCount = rowCount;
+        this.parameterVault = parameterVault;
         this.startSignal = startSignal;
         this.doneSignal = doneSignal;
         this.fw = fw;
@@ -63,9 +65,9 @@ public class StringProcessor implements Runnable {
         try {
             startSignal.await();
             ThreadLocalRandom randomGenerator = ThreadLocalRandom.current();
-	        outputWriterHolder.writeValueInLine(Thread.currentThread().getName() + " starts generating " + rowCount + " rows");
+	        outputWriterHolder.writeValueInLine(Thread.currentThread().getName() + " starts generating " + parameterVault.rowCount() + " rows");
 
-            for (long i = 0; i < rowCount; i++) {
+            for (int i = 0; i < parameterVault.rowCount(); i++) {
                 if (i != 0 && i % 10000 == 0) {
                     synchronized (fw) {
 	                    outputWriterHolder.writeValueInLine(Thread.currentThread().getName() + " writes next " + i + " rows");
@@ -81,7 +83,7 @@ public class StringProcessor implements Runnable {
 	            for (int colCount = 0; colCount < columnCount; colCount++) {
 		            input2TableInfo = input2TableInfoMap.get(colCount);
 
-		            input2TableInfo.generator().generate((int)i, randomGenerator, new ValueVault() {
+		            input2TableInfo.generator().generate(parameterVault.setIterationNumber(i), randomGenerator, new ValueVault() {
 			            @Override
 			            public void storeValue(DataWrapper value) {
 				            builder.append(value.getStringValue()).append(" ");
@@ -104,7 +106,7 @@ public class StringProcessor implements Runnable {
         }
     }
 
-    public void addIterationCount(long iterationCount) {
-        this.rowCount += iterationCount;
+    public void addIterationCount(int iterationCount) {
+        this.parameterVault = new DefaultParameterVault(parameterVault.dataPartNumber(), parameterVault.rowCount() + iterationCount);
     }
 }

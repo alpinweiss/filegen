@@ -18,6 +18,9 @@ package eu.alpinweiss.filegen.util;
 import com.healthmarketscience.jackcess.Table;
 import eu.alpinweiss.filegen.model.FieldType;
 import eu.alpinweiss.filegen.service.OutputWriterHolder;
+import eu.alpinweiss.filegen.util.vault.ParameterVault;
+import eu.alpinweiss.filegen.util.vault.ValueVault;
+import eu.alpinweiss.filegen.util.vault.impl.DefaultParameterVault;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -38,7 +41,7 @@ public class TableProcessor implements Runnable {
 
 	private final static Logger LOGGER = LogManager.getLogger(TableProcessor.class);
 
-	private long rowCount;
+	private ParameterVault parameterVault;
 	private CountDownLatch startSignal;
 	private CountDownLatch doneSignal;
 	private Table table;
@@ -47,10 +50,10 @@ public class TableProcessor implements Runnable {
 	private OutputWriterHolder outputWriterHolder;
 	private Map<Table, List<Object[]>> tableToGeneratedData;
 
-	public TableProcessor(long rowCount, CountDownLatch startSignal, CountDownLatch doneSignal, Table table,
+	public TableProcessor(ParameterVault parameterVault, CountDownLatch startSignal, CountDownLatch doneSignal, Table table,
 	                      int columnCount, Map<Integer, Input2TableInfo> input2TableInfoMap, OutputWriterHolder outputWriterHolder,
 	                      Map<Table, List<Object[]>> tableToGeneratedData) {
-		this.rowCount = rowCount;
+		this.parameterVault = parameterVault;
 		this.startSignal = startSignal;
 		this.doneSignal = doneSignal;
 		this.table = table;
@@ -68,7 +71,7 @@ public class TableProcessor implements Runnable {
 		try {
 			startSignal.await();
 
-			generateTableData(rowCount, table, columnCount, input2TableInfoMap, tableToGeneratedData);
+			generateTableData(parameterVault, table, columnCount, input2TableInfoMap, tableToGeneratedData);
 
 			doneSignal.countDown();
 		} catch (InterruptedException e) {
@@ -80,14 +83,14 @@ public class TableProcessor implements Runnable {
 		}
 	}
 
-	public void generateTableData(long rowCount, Table table, int columnCount, Map<Integer, Input2TableInfo> hashMap, Map<Table, List<Object[]>> tableToGeneratedData) throws SQLException, IOException {
+	public void generateTableData(ParameterVault parameterVault, Table table, int columnCount, Map<Integer, Input2TableInfo> hashMap, Map<Table, List<Object[]>> tableToGeneratedData) throws SQLException, IOException {
 		// Generate column headings
 		Input2TableInfo input2TableInfo;
 		AccessValueVault accessValueVault = new AccessValueVault();
 		List<Object[]> rowList = new ArrayList<>();
 
 		ThreadLocalRandom randomGenerator = ThreadLocalRandom.current();
-		for (int i = 1; i < rowCount; i++) {
+		for (int i = 1; i < parameterVault.rowCount()+1; i++) {
 			if (i != 0 &&  i % 10000 == 0) {
 				outputWriterHolder.writeValueInLine(Thread.currentThread().getName() + " Processed " + i + " rows");
 			}
@@ -97,7 +100,7 @@ public class TableProcessor implements Runnable {
 			for (int colCount = 0; colCount < columnCount; colCount++) {
 				input2TableInfo = hashMap.get(colCount);
 				accessValueVault.setIndex(colCount);
-				input2TableInfo.generator().generate(i, randomGenerator, accessValueVault);
+				input2TableInfo.generator().generate(parameterVault.setIterationNumber(i), randomGenerator, accessValueVault);
 			}
 			rowList.add(row);
 		}

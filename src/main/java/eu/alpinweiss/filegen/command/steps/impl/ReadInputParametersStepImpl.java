@@ -62,7 +62,7 @@ public class ReadInputParametersStepImpl implements ReadInputParametersStep {
 			XSSFWorkbook workbook = new XSSFWorkbook(file);
 			XSSFSheet sheet = workbook.getSheetAt(0);
 
-			long iterationCount = readIterationCount(sheet);
+			int iterationCount = readIterationCount(sheet);
 			String lineSeparator = readLineSeparator(sheet);
             String outputFileName = readOutputFileName(sheet);
 			int sheetCount = readSheetCount(sheet);
@@ -147,10 +147,10 @@ public class ReadInputParametersStepImpl implements ReadInputParametersStep {
         return (String) o;
     }
 
-    private long readIterationCount(XSSFSheet sheet) {
+    private int readIterationCount(XSSFSheet sheet) {
 		XSSFRow row = sheet.getRow(0);
 		Cell cell = row.getCell(1);
-		return (long) cell.getNumericCellValue();
+		return (int) cell.getNumericCellValue();
 	}
 	private String readLineSeparator(XSSFSheet sheet) {
 		XSSFRow row = sheet.getRow(1);

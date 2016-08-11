@@ -22,6 +22,8 @@ import eu.alpinweiss.filegen.service.GenerateAdvancedFileService;
 import eu.alpinweiss.filegen.service.OutputWriterHolder;
 import eu.alpinweiss.filegen.util.Input2TableInfo;
 import eu.alpinweiss.filegen.util.StringProcessor;
+import eu.alpinweiss.filegen.util.vault.ParameterVault;
+import eu.alpinweiss.filegen.util.vault.impl.DefaultParameterVault;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -47,7 +49,7 @@ public class GenerateAdvancedFileServiceImpl implements GenerateAdvancedFileServ
 	private OutputWriterHolder outputWriterHolder;
 
     @Override
-    public void generateFile(String filename, long rowCount, List<FieldDefinition> fieldDefinitionList) {
+    public void generateFile(String filename, int rowCount, List<FieldDefinition> fieldDefinitionList) {
 
         long startTime = new Date().getTime();
 
@@ -59,8 +61,8 @@ public class GenerateAdvancedFileServiceImpl implements GenerateAdvancedFileServ
             FileWriter fw = new FileWriter(newTextFile);
 
             doneSignal = new CountDownLatch(THREAD_COUNT);
-            long iterationCount = rowCount / THREAD_COUNT;
-            long iterationMod = rowCount % THREAD_COUNT;
+            int iterationCount = rowCount / THREAD_COUNT;
+            int iterationMod = rowCount % THREAD_COUNT;
 
 	        int columnCount = fieldDefinitionList.size();
 
@@ -78,7 +80,8 @@ public class GenerateAdvancedFileServiceImpl implements GenerateAdvancedFileServ
 
 
             for (int i = 0; i < THREAD_COUNT; i++) {
-                StringProcessor stringProcessor = new StringProcessor(iterationCount, startSignal, doneSignal, fw, columnCount, tableInfoHashMap, outputWriterHolder);
+                ParameterVault parameterVault = new DefaultParameterVault(i, iterationCount);
+                StringProcessor stringProcessor = new StringProcessor(parameterVault, startSignal, doneSignal, fw, columnCount, tableInfoHashMap, outputWriterHolder);
                 if (i == 0) {
                     stringProcessor.addIterationCount(iterationMod);
                 }

@@ -23,6 +23,6 @@ package eu.alpinweiss.filegen.model;
  */
 public enum FieldType {
 
-	STRING, FLOAT, INTEGER, DATE, RANGE, NUMBERRANGE, DATERANGE
+	STRING, FLOAT, INTEGER, DATE, RANGE, NUMBERRANGE, DATERANGE, AUTONUMBER
 
 }

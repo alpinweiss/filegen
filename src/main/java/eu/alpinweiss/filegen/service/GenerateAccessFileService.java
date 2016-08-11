@@ -27,6 +27,6 @@ import java.util.List;
  */
 public interface GenerateAccessFileService {
 
-	void generateAccess(String accessFilename, long rowCount, List<FieldDefinition> fieldDefinitionList, int tableCount);
+	void generateAccess(String accessFilename, int rowCount, List<FieldDefinition> fieldDefinitionList, int tableCount);
 
 }

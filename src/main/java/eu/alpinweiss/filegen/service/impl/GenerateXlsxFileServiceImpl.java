@@ -21,6 +21,8 @@ import eu.alpinweiss.filegen.service.GenerateXlsxFileService;
 import eu.alpinweiss.filegen.service.OutputWriterHolder;
 import eu.alpinweiss.filegen.util.Input2TableInfo;
 import eu.alpinweiss.filegen.util.SheetProcessor;
+import eu.alpinweiss.filegen.util.vault.ParameterVault;
+import eu.alpinweiss.filegen.util.vault.impl.DefaultParameterVault;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.*;
@@ -49,7 +51,7 @@ public class GenerateXlsxFileServiceImpl implements GenerateXlsxFileService {
 	@Inject
 	private OutputWriterHolder outputWriterHolder;
 
-	public void generateExcel(String excelFilename, long rowCount, List<FieldDefinition> fieldDefinitionList, int sheetCount) {
+	public void generateExcel(String excelFilename, int rowCount, List<FieldDefinition> fieldDefinitionList, int sheetCount) {
 
 		long startTime = new Date().getTime();
 
@@ -92,19 +94,22 @@ public class GenerateXlsxFileServiceImpl implements GenerateXlsxFileService {
 
 				doneSignal = new CountDownLatch(sheetCount);
 
-				SheetProcessor stringProcessorSheet1 = new SheetProcessor(rowCount, startSignal, doneSignal, cs, sheet1, columnCount, input2TableInfoMap, outputWriterHolder);
+				ParameterVault parameterVault = new DefaultParameterVault(0, rowCount);
+				SheetProcessor stringProcessorSheet1 = new SheetProcessor(parameterVault, startSignal, doneSignal, cs, sheet1, columnCount, input2TableInfoMap, outputWriterHolder);
 				new Thread(stringProcessorSheet1, "Processor-" + sheetCount).start();
 
 				for (int i = 0; i < sheetCount-1; i++) {
 					SXSSFSheet sheet = (SXSSFSheet) wb.createSheet("dataSheet_" + i);
-					SheetProcessor stringProcessor = new SheetProcessor(rowCount, startSignal, doneSignal, cs, sheet, columnCount, input2TableInfoMap, outputWriterHolder);
+					ParameterVault parameterVaultRest = new DefaultParameterVault(i+1, rowCount);
+					SheetProcessor stringProcessor = new SheetProcessor(parameterVaultRest, startSignal, doneSignal, cs, sheet, columnCount, input2TableInfoMap, outputWriterHolder);
 					new Thread(stringProcessor, "Processor-" + i).start();
 				}
 
 				startSignal.countDown();
 				doneSignal.await();
 			} else {
-				new SheetProcessor().generateSheetData(rowCount, cs, sheet1, columnCount, input2TableInfoMap);
+				ParameterVault parameterVault = new DefaultParameterVault(0, rowCount);
+				new SheetProcessor().generateSheetData(parameterVault, cs, sheet1, columnCount, input2TableInfoMap);
 			}
 
 

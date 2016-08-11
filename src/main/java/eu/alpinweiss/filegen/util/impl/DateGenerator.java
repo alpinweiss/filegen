@@ -20,7 +20,8 @@ import eu.alpinweiss.filegen.model.FieldType;
 import eu.alpinweiss.filegen.model.Generate;
 import eu.alpinweiss.filegen.util.AbstractDataWrapper;
 import eu.alpinweiss.filegen.util.FieldGenerator;
-import eu.alpinweiss.filegen.util.ValueVault;
+import eu.alpinweiss.filegen.util.vault.ParameterVault;
+import eu.alpinweiss.filegen.util.vault.ValueVault;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,7 +42,7 @@ public class DateGenerator implements FieldGenerator {
 	}
 
 	@Override
-	public void generate(int iterationNo, ThreadLocalRandom randomGenerator, ValueVault valueVault) {
+	public void generate(ParameterVault parameterVault, ThreadLocalRandom randomGenerator, ValueVault valueVault) {
 		String pattern = fieldDefinition.getPattern();
 
 		if (pattern == null || "".equals(pattern)) {

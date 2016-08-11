@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.alpinweiss.filegen.util;
+package eu.alpinweiss.filegen.util.vault;
+
+import eu.alpinweiss.filegen.util.DataWrapper;
 
 /**
  * {@link ValueVault}.

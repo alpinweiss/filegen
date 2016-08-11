@@ -21,7 +21,8 @@ import eu.alpinweiss.filegen.model.FieldType;
 import eu.alpinweiss.filegen.model.Generate;
 import eu.alpinweiss.filegen.util.AbstractDataWrapper;
 import eu.alpinweiss.filegen.util.FieldGenerator;
-import eu.alpinweiss.filegen.util.ValueVault;
+import eu.alpinweiss.filegen.util.vault.ParameterVault;
+import eu.alpinweiss.filegen.util.vault.ValueVault;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -40,7 +41,7 @@ public class IntegerGenerator implements FieldGenerator {
 	}
 
 	@Override
-	public void generate(int iterationNo, final ThreadLocalRandom randomGenerator, ValueVault valueVault) {
+	public void generate(ParameterVault parameterVault, final ThreadLocalRandom randomGenerator, ValueVault valueVault) {
 		synchronized (this) {
 			final String pattern = fieldDefinition.getPattern();
 			if (Generate.Y.equals(fieldDefinition.getGenerate())) {
