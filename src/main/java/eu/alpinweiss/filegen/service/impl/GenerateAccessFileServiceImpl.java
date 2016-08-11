@@ -23,7 +23,7 @@ import eu.alpinweiss.filegen.model.FieldType;
 import eu.alpinweiss.filegen.service.GenerateAccessFileService;
 import eu.alpinweiss.filegen.service.OutputWriterHolder;
 import eu.alpinweiss.filegen.util.Input2TableInfo;
-import eu.alpinweiss.filegen.util.TableProcessor;
+import eu.alpinweiss.filegen.util.processor.TableProcessor;
 import eu.alpinweiss.filegen.util.vault.ParameterVault;
 import eu.alpinweiss.filegen.util.vault.impl.DefaultParameterVault;
 import org.apache.logging.log4j.LogManager;

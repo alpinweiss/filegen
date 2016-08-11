@@ -15,7 +15,7 @@
  */
 package eu.alpinweiss.filegen.service;
 
-import eu.alpinweiss.filegen.util.OutputWriter;
+import eu.alpinweiss.filegen.util.writer.OutputWriter;
 
 /**
  * {@link OutputWriterHolder}.

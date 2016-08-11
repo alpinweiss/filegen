@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.alpinweiss.filegen.util;
+package eu.alpinweiss.filegen.util.processor;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -24,6 +24,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ThreadLocalRandom;
 
 import eu.alpinweiss.filegen.service.OutputWriterHolder;
+import eu.alpinweiss.filegen.util.wrapper.DataWrapper;
+import eu.alpinweiss.filegen.util.Input2TableInfo;
 import eu.alpinweiss.filegen.util.vault.ParameterVault;
 import eu.alpinweiss.filegen.util.vault.ValueVault;
 import eu.alpinweiss.filegen.util.vault.impl.DefaultParameterVault;

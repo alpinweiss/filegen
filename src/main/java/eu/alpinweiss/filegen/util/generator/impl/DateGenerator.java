@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.alpinweiss.filegen.util.impl;
+package eu.alpinweiss.filegen.util.generator.impl;
 
 import eu.alpinweiss.filegen.model.FieldDefinition;
 import eu.alpinweiss.filegen.model.FieldType;
 import eu.alpinweiss.filegen.model.Generate;
-import eu.alpinweiss.filegen.util.AbstractDataWrapper;
-import eu.alpinweiss.filegen.util.FieldGenerator;
+import eu.alpinweiss.filegen.util.wrapper.AbstractDataWrapper;
+import eu.alpinweiss.filegen.util.generator.FieldGenerator;
 import eu.alpinweiss.filegen.util.vault.ParameterVault;
 import eu.alpinweiss.filegen.util.vault.ValueVault;
 

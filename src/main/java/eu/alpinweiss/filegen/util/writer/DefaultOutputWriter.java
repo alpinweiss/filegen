@@ -13,31 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.alpinweiss.filegen.util;
-
-import org.apache.poi.ss.usermodel.CellStyle;
-
-import java.util.Date;
+package eu.alpinweiss.filegen.util.writer;
 
 /**
- * {@link AbstractDataWrapper}.
+ * {@link DefaultOutputWriter}.
  *
  * @author Aleksandrs.Severgins | <a href="http://alpinweiss.eu">SIA Alpinweiss</a>
  */
-public abstract class AbstractDataWrapper implements DataWrapper {
+public class DefaultOutputWriter implements OutputWriter {
 
 	@Override
-	public String getStringValue() {
-		return null;
+	public void writeValueInLine(String value) {
+		System.out.println(value);
 	}
 
 	@Override
-	public Date getDateValue() {
-		return null;
-	}
-
-	@Override
-	public Double getNumberValue() {
-		return null;
+	public void writeValue(String value) {
+		System.out.print(value);
 	}
 }

@@ -20,7 +20,7 @@ import eu.alpinweiss.filegen.model.FieldDefinition;
 import eu.alpinweiss.filegen.service.GenerateXlsxFileService;
 import eu.alpinweiss.filegen.service.OutputWriterHolder;
 import eu.alpinweiss.filegen.util.Input2TableInfo;
-import eu.alpinweiss.filegen.util.SheetProcessor;
+import eu.alpinweiss.filegen.util.processor.SheetProcessor;
 import eu.alpinweiss.filegen.util.vault.ParameterVault;
 import eu.alpinweiss.filegen.util.vault.impl.DefaultParameterVault;
 import org.apache.logging.log4j.LogManager;

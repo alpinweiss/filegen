@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.alpinweiss.filegen.util;
+package eu.alpinweiss.filegen.util.processor;
 
 import eu.alpinweiss.filegen.model.FieldType;
 import eu.alpinweiss.filegen.service.OutputWriterHolder;
+import eu.alpinweiss.filegen.util.wrapper.DataWrapper;
+import eu.alpinweiss.filegen.util.Input2TableInfo;
 import eu.alpinweiss.filegen.util.vault.ParameterVault;
 import eu.alpinweiss.filegen.util.vault.ValueVault;
-import eu.alpinweiss.filegen.util.vault.impl.DefaultParameterVault;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;

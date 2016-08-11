@@ -17,8 +17,8 @@ package eu.alpinweiss.filegen.service.impl;
 
 import com.google.inject.Singleton;
 import eu.alpinweiss.filegen.service.OutputWriterHolder;
-import eu.alpinweiss.filegen.util.DefaultOutputWriter;
-import eu.alpinweiss.filegen.util.OutputWriter;
+import eu.alpinweiss.filegen.util.writer.DefaultOutputWriter;
+import eu.alpinweiss.filegen.util.writer.OutputWriter;
 
 /**
  * {@link OutputWriterHolderImpl}.

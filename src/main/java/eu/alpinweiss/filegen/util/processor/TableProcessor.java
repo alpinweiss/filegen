@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.alpinweiss.filegen.util;
+package eu.alpinweiss.filegen.util.processor;
 
 import com.healthmarketscience.jackcess.Table;
 import eu.alpinweiss.filegen.model.FieldType;
 import eu.alpinweiss.filegen.service.OutputWriterHolder;
+import eu.alpinweiss.filegen.util.wrapper.DataWrapper;
+import eu.alpinweiss.filegen.util.Input2TableInfo;
 import eu.alpinweiss.filegen.util.vault.ParameterVault;
 import eu.alpinweiss.filegen.util.vault.ValueVault;
-import eu.alpinweiss.filegen.util.vault.impl.DefaultParameterVault;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -33,7 +34,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * {@link eu.alpinweiss.filegen.util.TableProcessor}.
+ * {@link TableProcessor}.
  *
  * @author Aleksandrs.Severgins | <a href="http://alpinweiss.eu">SIA Alpinweiss</a>
  */

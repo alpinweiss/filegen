@@ -15,7 +15,7 @@
  */
 package eu.alpinweiss.filegen.util.vault;
 
-import eu.alpinweiss.filegen.util.DataWrapper;
+import eu.alpinweiss.filegen.util.wrapper.DataWrapper;
 
 /**
  * {@link ValueVault}.

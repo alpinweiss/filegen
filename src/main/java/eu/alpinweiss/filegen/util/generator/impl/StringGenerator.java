@@ -13,62 +13,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.alpinweiss.filegen.util.impl;
+package eu.alpinweiss.filegen.util.generator.impl;
 
+import com.mifmif.common.regex.Generex;
 import eu.alpinweiss.filegen.model.FieldDefinition;
 import eu.alpinweiss.filegen.model.FieldType;
-import eu.alpinweiss.filegen.util.AbstractDataWrapper;
-import eu.alpinweiss.filegen.util.FieldGenerator;
+import eu.alpinweiss.filegen.model.Generate;
+import eu.alpinweiss.filegen.util.wrapper.AbstractDataWrapper;
+import eu.alpinweiss.filegen.util.generator.FieldGenerator;
 import eu.alpinweiss.filegen.util.vault.ParameterVault;
 import eu.alpinweiss.filegen.util.vault.ValueVault;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * {@link RangeGenerator}.
+ * {@link StringGenerator}.
  *
  * @author Aleksandrs.Severgins | <a href="http://alpinweiss.eu">SIA Alpinweiss</a>
  */
-public class RangeGenerator implements FieldGenerator {
+public class StringGenerator implements FieldGenerator {
 
+	private final Generex generex;
 	private final FieldDefinition fieldDefinition;
-	public static final String EMPTY = "";
 
-	public RangeGenerator(FieldDefinition fieldDefinition) {
+	public StringGenerator(FieldDefinition fieldDefinition) {
+		this.generex = new Generex(fieldDefinition.getPattern());
 		this.fieldDefinition = fieldDefinition;
 	}
 
 	@Override
 	public void generate(ParameterVault parameterVault, ThreadLocalRandom randomGenerator, ValueVault valueVault) {
 		synchronized (this) {
-			final String pattern = fieldDefinition.getPattern();
-			if (pattern == null || EMPTY.equals(pattern)) {
-				valueVault.storeValue(new StringRangeDataWrapper());
-				return;
-			}
-
-			final String[] split = pattern.split(",");
-			if (split.length == 1) {
-				valueVault.storeValue(new StringRangeDataWrapper() {
+			if (Generate.Y.equals(fieldDefinition.getGenerate())) {
+				valueVault.storeValue(new StringDataWrapper() {
 					@Override
 					public String getStringValue() {
-						return pattern;
+						return generex.random();
 					}
 				});
-				return;
+			} else {
+				valueVault.storeValue(new StringDataWrapper() {
+					@Override
+					public String getStringValue() {
+						return fieldDefinition.getPattern();
+					}
+				});
 			}
-
-			final int i = ThreadLocalRandom.current().nextInt(0, split.length);
-			valueVault.storeValue(new StringRangeDataWrapper() {
-				@Override
-				public String getStringValue() {
-					return split[i].trim();
-				}
-			});
 		}
 	}
 
-	private class StringRangeDataWrapper extends AbstractDataWrapper {
+	private class StringDataWrapper extends AbstractDataWrapper {
 		@Override
 		public FieldType getFieldType() {
 			return FieldType.STRING;

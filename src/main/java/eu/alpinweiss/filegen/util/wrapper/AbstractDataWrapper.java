@@ -13,22 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.alpinweiss.filegen.util;
+package eu.alpinweiss.filegen.util.wrapper;
+
+import java.util.Date;
 
 /**
- * {@link DefaultOutputWriter}.
+ * {@link AbstractDataWrapper}.
  *
  * @author Aleksandrs.Severgins | <a href="http://alpinweiss.eu">SIA Alpinweiss</a>
  */
-public class DefaultOutputWriter implements OutputWriter {
+public abstract class AbstractDataWrapper implements DataWrapper {
 
 	@Override
-	public void writeValueInLine(String value) {
-		System.out.println(value);
+	public String getStringValue() {
+		return null;
 	}
 
 	@Override
-	public void writeValue(String value) {
-		System.out.print(value);
+	public Date getDateValue() {
+		return null;
+	}
+
+	@Override
+	public Double getNumberValue() {
+		return null;
 	}
 }

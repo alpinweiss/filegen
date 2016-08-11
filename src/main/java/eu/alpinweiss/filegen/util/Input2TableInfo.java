@@ -17,8 +17,8 @@ package eu.alpinweiss.filegen.util;
 
 import eu.alpinweiss.filegen.model.FieldDefinition;
 import eu.alpinweiss.filegen.model.FieldType;
-import eu.alpinweiss.filegen.model.Generate;
-import eu.alpinweiss.filegen.util.impl.*;
+import eu.alpinweiss.filegen.util.generator.FieldGenerator;
+import eu.alpinweiss.filegen.util.generator.impl.*;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.Workbook;
