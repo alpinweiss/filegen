@@ -24,6 +24,8 @@ public interface ParameterVault {
     int iterationNumber();
     int dataPartNumber();
     int rowCount();
+    int overrun();
 
     ParameterVault setIterationNumber(int iterationNumber);
+    ParameterVault setOverrun(int overrun);
 }

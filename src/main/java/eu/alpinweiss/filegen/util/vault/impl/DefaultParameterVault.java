@@ -27,6 +27,7 @@ public class DefaultParameterVault implements ParameterVault {
     private int iterationNumber;
     private int dataPartNumber;
     private int rowCount;
+    private int overrun;
 
     public DefaultParameterVault(int dataPartNumber, int rowCount) {
         this.dataPartNumber = dataPartNumber;
@@ -51,6 +52,17 @@ public class DefaultParameterVault implements ParameterVault {
     @Override
     public ParameterVault setIterationNumber(int iterationNumber) {
         this.iterationNumber = iterationNumber;
+        return this;
+    }
+
+    @Override
+    public int overrun() {
+        return overrun;
+    }
+
+    @Override
+    public ParameterVault setOverrun(int overrun) {
+        this.overrun = overrun;
         return this;
     }
 }

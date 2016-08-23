@@ -97,4 +97,22 @@ public class SequenceGeneratorTest {
             });
         }
     }
+
+    @Test
+    public void testGenerationReset() {
+        final String[] expectedValues = new String[] {"5", "6", "7", "8", "9", "1", "2", "3", "4", "5"};
+        FieldDefinition fieldDefinition = new FieldDefinition();
+        fieldDefinition.setPattern("[SEQ(5,1,RESTART)]");
+        SequenceGenerator generator = new SequenceGenerator(fieldDefinition);
+        final DefaultParameterVault parameterVault = new DefaultParameterVault(0, 5);
+        for (int i = 0; i < 10; i++) {
+            parameterVault.setIterationNumber(i);
+            generator.generate(parameterVault, null, new ValueVault() {
+                @Override
+                public void storeValue(DataWrapper value) {
+                    assertEquals(expectedValues[parameterVault.iterationNumber()], value.getStringValue());
+                }
+            });
+        }
+    }
 }

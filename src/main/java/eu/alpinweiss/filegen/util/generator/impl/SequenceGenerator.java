@@ -83,9 +83,12 @@ public class SequenceGenerator implements FieldGenerator {
         valueVault.storeValue(new StringDataWrapper() {
             @Override
             public String getStringValue() {
-                int value = startNum + (parameterVault.rowCount() * parameterVault.dataPartNumber()) + parameterVault.iterationNumber();
+                int value = (startNum + (parameterVault.rowCount() * parameterVault.dataPartNumber()) + parameterVault.iterationNumber()) - parameterVault.overrun();
                 if (value > maxValue && shouldFail) {
                     throw new RuntimeException("Sequence Generator Exception. Value: " + value + " meets limit: " + maxValue);
+                } else if (value > maxValue && !shouldFail) {
+                    parameterVault.setOverrun(value - 1);
+                    value = value - parameterVault.overrun();
                 }
                 return sequencePattern[0] + StringUtils.leftPad(Integer.toString(value), digitCount, '0') + sequencePattern[2];
             }
