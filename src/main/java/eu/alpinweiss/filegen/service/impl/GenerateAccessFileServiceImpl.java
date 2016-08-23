@@ -109,7 +109,7 @@ public class GenerateAccessFileServiceImpl implements GenerateAccessFileService 
 					tableBuilder.addColumn(new ColumnBuilder(input2TableInfo.getFieldText()).setSQLType(getType(input2TableInfo.getFieldDefinition().getType())));
 				}
 				ParameterVault parameterVault = new DefaultParameterVault(0, rowCount);
-				new TableProcessor().generateTableData(parameterVault, tableBuilder.toTable(db), columnCount, input2TableInfoMap, tableToGeneratedData);
+				new TableProcessor(outputWriterHolder).generateTableData(parameterVault, tableBuilder.toTable(db), columnCount, input2TableInfoMap, tableToGeneratedData);
 			}
 
 

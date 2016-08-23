@@ -109,7 +109,7 @@ public class GenerateXlsxFileServiceImpl implements GenerateXlsxFileService {
 				doneSignal.await();
 			} else {
 				ParameterVault parameterVault = new DefaultParameterVault(0, rowCount);
-				new SheetProcessor().generateSheetData(parameterVault, cs, sheet1, columnCount, input2TableInfoMap);
+				new SheetProcessor(outputWriterHolder).generateSheetData(parameterVault, cs, sheet1, columnCount, input2TableInfoMap);
 			}
 
 

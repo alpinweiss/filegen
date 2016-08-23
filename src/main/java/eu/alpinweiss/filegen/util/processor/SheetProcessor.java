@@ -62,7 +62,8 @@ public class SheetProcessor implements Runnable {
 		this.outputWriterHolder = outputWriterHolder;
 	}
 
-	public SheetProcessor() {
+	public SheetProcessor(OutputWriterHolder outputWriterHolder) {
+		this.outputWriterHolder = outputWriterHolder;
 	}
 
 	@Override

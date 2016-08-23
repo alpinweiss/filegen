@@ -64,7 +64,8 @@ public class TableProcessor implements Runnable {
 		this.tableToGeneratedData = tableToGeneratedData;
 	}
 
-	public TableProcessor() {
+	public TableProcessor(OutputWriterHolder outputWriterHolder) {
+		this.outputWriterHolder = outputWriterHolder;
 	}
 
 	@Override
