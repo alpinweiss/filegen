@@ -4,14 +4,35 @@ This README would normally document whatever steps are necessary to get your app
 
 ### File Generator by Alpinweiss ###
 
-* Quick summary
-* Version 1.0
+* MS Excel, MS Access and plain file generator for testing purposes. The goal generate file containing some random data for third party app testing.
+* Version 16.8.1
 
-### Setup ###
+### Setup for development ###
 
-* Install Java
-* Install Maven
+* Install Java 7+
+* Install Maven 3+
 * run app from IDE or from command line
+
+### Build excecutable jar ###
+
+```bash
+$ mvn package
+```
+
+All necessary configuration provided by default. All you need just build the app.
+
+### How to use ###
+
+```bash
+$ java -jar filegen-XX.jar -i <input file name> -x
+```
+
+parameter list:
+
+| Parameter | Attribute | Description | Example |
+| -i | <input file name> | Input file name containing generation options | -i InputSample.xlsx |
+| -x |||||
+
 
 ### Authors ###
 

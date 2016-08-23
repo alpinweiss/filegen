@@ -127,6 +127,7 @@ public class SheetProcessor implements Runnable {
 							case AUTONUMBER:
 								dataCell.setCellType(Cell.CELL_TYPE_NUMERIC);
 								dataCell.setCellValue(wrapper.getNumberValue());
+							case SEQUENCE:
 							default:
 								dataCell.setCellValue(wrapper.getStringValue());
 						}
