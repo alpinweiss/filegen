@@ -49,39 +49,39 @@ public class IntegerGenerator implements FieldGenerator {
 					if (generex == null) {
 						this.generex = new Generex(fieldDefinition.getPattern());
 					}
-					valueVault.storeValue(new IntegerDataWrapper() {
+					valueVault.storeValue(new StringDataWrapper() {
 						@Override
-						public Double getNumberValue() {
-							return Double.valueOf(generex.random());
+						public String getStringValue() {
+							return generex.random();
 						}
 					});
 				} else {
-					valueVault.storeValue(new IntegerDataWrapper() {
+					valueVault.storeValue(new StringDataWrapper() {
 						@Override
-						public Double getNumberValue() {
-							return new Double(randomGenerator.nextInt());
+						public String getStringValue() {
+							return Integer.toString(randomGenerator.nextInt());
 						}
 					});
 				}
 			} else {
 				if (pattern != null && !"".equals(pattern)) {
-					valueVault.storeValue(new IntegerDataWrapper() {
+					valueVault.storeValue(new StringDataWrapper() {
 						@Override
-						public Double getNumberValue() {
-							return Double.valueOf(pattern);
+						public String getStringValue() {
+							return pattern;
 						}
 					});
 				} else {
-					valueVault.storeValue(new IntegerDataWrapper());
+					valueVault.storeValue(new StringDataWrapper());
 				}
 			}
 		}
 	}
 
-	private class IntegerDataWrapper extends AbstractDataWrapper {
+	private class StringDataWrapper extends AbstractDataWrapper {
 		@Override
 		public FieldType getFieldType() {
-			return FieldType.INTEGER;
+			return FieldType.STRING;
 		}
 	}
 }
