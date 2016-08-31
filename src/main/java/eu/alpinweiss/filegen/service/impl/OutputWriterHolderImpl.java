@@ -48,4 +48,9 @@ public class OutputWriterHolderImpl implements OutputWriterHolder {
 	public void writeValue(String value) {
 		outputWriter.writeValue(value);
 	}
+
+	@Override
+	public void writeException(Exception e) {
+		outputWriter.writeException(e);
+	}
 }

@@ -31,4 +31,13 @@ public class DefaultOutputWriter implements OutputWriter {
 	public void writeValue(String value) {
 		System.out.print(value);
 	}
+
+	@Override
+	public void writeException(Exception e) {
+		if (e != null) {
+			e.printStackTrace(System.out);
+		} else {
+			System.out.println("Exception is null!");
+		}
+	}
 }

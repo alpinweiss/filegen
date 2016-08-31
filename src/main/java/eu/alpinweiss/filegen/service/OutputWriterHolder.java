@@ -28,6 +28,8 @@ public interface OutputWriterHolder {
 
 	void writeValueInLine(String value);
 
+	void writeException(Exception e);
+
 	void writeValue(String value);
 
 }

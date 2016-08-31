@@ -25,4 +25,6 @@ public interface OutputWriter {
 	void writeValueInLine(String value);
 
 	void writeValue(String value);
+
+	void writeException(Exception e);
 }

@@ -71,9 +71,8 @@ public class DateGenerator implements FieldGenerator {
 						try {
 							return dateFormat.parse(split[1]);
 						} catch (ParseException e) {
-							e.printStackTrace();
+							throw new RuntimeException(e);
 						}
-						return null;
 					}
 				});
 			} else {

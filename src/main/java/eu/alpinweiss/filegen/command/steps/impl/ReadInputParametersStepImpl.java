@@ -59,67 +59,68 @@ public class ReadInputParametersStepImpl implements ReadInputParametersStep {
 		try {
 			FileInputStream file = new FileInputStream(new File(parameter));
 
-			XSSFWorkbook workbook = new XSSFWorkbook(file);
-			XSSFSheet sheet = workbook.getSheetAt(0);
+			try (XSSFWorkbook workbook = new XSSFWorkbook(file)) {
+				XSSFSheet sheet = workbook.getSheetAt(0);
 
-			int iterationCount = readIterationCount(sheet);
-			String lineSeparator = readLineSeparator(sheet);
-            String outputFileName = readOutputFileName(sheet);
-			int sheetCount = readSheetCount(sheet);
+				int iterationCount = readIterationCount(sheet);
+				String lineSeparator = readLineSeparator(sheet);
+				String outputFileName = readOutputFileName(sheet);
+				int sheetCount = readSheetCount(sheet);
 
-			outputWriterHolder.writeValueInLine("Iterations: " + iterationCount + " lineSeparator: " + lineSeparator);
-            List<Object[]> fields = new ArrayList<>(sheet.getLastRowNum()-4);
+				outputWriterHolder.writeValueInLine("Iterations: " + iterationCount + " lineSeparator: " + lineSeparator);
+				List<Object[]> fields = new ArrayList<>(sheet.getLastRowNum() - 4);
 
-			for (int i = 5; i <= sheet.getLastRowNum(); i++) {
+				for (int i = 5; i <= sheet.getLastRowNum(); i++) {
 
-				XSSFRow row = sheet.getRow(i);
-                Object[] fieldDefinition = new Object[row.getLastCellNum()];
+					XSSFRow row = sheet.getRow(i);
+					Object[] fieldDefinition = new Object[row.getLastCellNum()];
 
-				for (int y = 0; y < row.getLastCellNum(); y++) {
-					XSSFCell cell = row.getCell(y);
+					for (int y = 0; y < row.getLastCellNum(); y++) {
+						XSSFCell cell = row.getCell(y);
 
-					if (cell == null) {
-                        fieldDefinition[y] = null;
+						if (cell == null) {
+							fieldDefinition[y] = null;
+							break;
+						}
+
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						fieldDefinition[y] = cell.toString();
+					}
+					fields.add(fieldDefinition);
+				}
+
+				file.close();
+
+				for (Object[] field : fields) {
+					FieldDefinition fieldDefinition = new FieldDefinition();
+					String name = getStringName(field[0]);
+					if (name == null || "".equals(name)) {
 						break;
 					}
-
-					cell.setCellType(Cell.CELL_TYPE_STRING);
-					fieldDefinition[y] = cell.toString();
+					fieldDefinition.setFieldName(name);
+					String fieldType = (String) field[1];
+					fieldDefinition.setType(fieldType != null ? FieldType.valueOf(fieldType.toUpperCase()) : FieldType.STRING);
+					String fieldNeedToGenerate = (String) field[2];
+					fieldDefinition.setGenerate(fieldNeedToGenerate != null ? Generate.valueOf(fieldNeedToGenerate.toUpperCase()) : Generate.N);
+					if ((field.length > 3)) {
+						if (field[3] != null && field[3] instanceof Number) {
+							fieldDefinition.setPattern(field[3].toString());
+						} else {
+							fieldDefinition.setPattern((String) field[3]);
+						}
+					}
+					model.getFieldDefinitionList().add(fieldDefinition);
 				}
-                fields.add(fieldDefinition);
+
+				model.setRowCount(iterationCount);
+				model.setLineSeparator(lineSeparator);
+				model.setOutputFileName(outputFileName);
+				model.setDataStorageCount(sheetCount);
+
+				outputWriterHolder.writeValueInLine("");
+
+				workbook.close();
 			}
-
-			file.close();
-
-            for (Object[] field : fields) {
-                FieldDefinition fieldDefinition = new FieldDefinition();
-                String name = getStringName(field[0]);
-	            if (name == null || "".equals(name)) {
-		            break;
-	            }
-                fieldDefinition.setFieldName(name);
-	            String fieldType = (String) field[1];
-	            fieldDefinition.setType(fieldType != null ? FieldType.valueOf(fieldType.toUpperCase()) : FieldType.STRING);
-                String fieldNeedToGenerate = (String) field[2];
-                fieldDefinition.setGenerate(fieldNeedToGenerate != null ? Generate.valueOf(fieldNeedToGenerate.toUpperCase()) : Generate.N);
-                if ((field.length > 3)) {
-	                if (field[3] != null && field[3] instanceof Number) {
-		                fieldDefinition.setPattern(field[3].toString());
-	                } else {
-		                fieldDefinition.setPattern((String) field[3]);
-	                }
-                }
-                model.getFieldDefinitionList().add(fieldDefinition);
-            }
-
-            model.setRowCount(iterationCount);
-            model.setLineSeparator(lineSeparator);
-            model.setOutputFileName(outputFileName);
-			model.setDataStorageCount(sheetCount);
-
-			outputWriterHolder.writeValueInLine("");
-            
-            workbook.close();
 
 		} catch (FileNotFoundException e) {
 			LOGGER.error("Can't read input parameters file", e);

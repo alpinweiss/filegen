@@ -43,8 +43,6 @@ public class DateRangeGenerator implements FieldGenerator {
 	private final FieldDefinition fieldDefinition;
 	private List<Date> dates;
 
-	private final static Logger LOGGER = LogManager.getLogger(DateRangeGenerator.class);
-
 	public DateRangeGenerator(FieldDefinition fieldDefinition) {
 		this.fieldDefinition = fieldDefinition;
 	}
@@ -93,7 +91,7 @@ public class DateRangeGenerator implements FieldGenerator {
 					}
 				});
 			} catch (ParseException e) {
-				LOGGER.error(e.getMessage(), e);
+				throw new RuntimeException(e);
 			}
 		}
 	}
