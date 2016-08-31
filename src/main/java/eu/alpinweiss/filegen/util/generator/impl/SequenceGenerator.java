@@ -51,10 +51,11 @@ public class SequenceGenerator implements FieldGenerator {
         if (!StringUtils.isEmpty(pattern) && pattern.matches(SEQUENCE_WITH_SUFFIX_AND_PREFIX)) {
             sequencePattern = cropPattern(pattern);
 
-            final Scanner scanner = new Scanner(sequencePattern[1]);
-            scanner.useDelimiter("\\D+");
-            startNum = scanner.nextInt();
-            digitCount = scanner.nextInt();
+            try (Scanner scanner = new Scanner(sequencePattern[1])) {
+                scanner.useDelimiter("\\D+");
+                startNum = scanner.nextInt();
+                digitCount = scanner.nextInt();
+            }
             maxValue = Integer.parseInt(StringUtils.repeat("9", digitCount));
             shouldFail = sequencePattern[1].contains("FAIL");
         }

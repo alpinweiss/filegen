@@ -5,3 +5,4 @@ target
 filegen.iml
 dependency-reduced-pom.xml
 .idea
+/bin
