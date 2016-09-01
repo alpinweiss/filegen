@@ -19,7 +19,6 @@ import eu.alpinweiss.filegen.model.FieldDefinition;
 import eu.alpinweiss.filegen.util.vault.ValueVault;
 import eu.alpinweiss.filegen.util.vault.impl.DefaultParameterVault;
 import eu.alpinweiss.filegen.util.wrapper.DataWrapper;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,7 +26,6 @@ import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.*;
 
 /**
  * {@link SequenceGeneratorTest}.

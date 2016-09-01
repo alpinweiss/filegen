@@ -21,8 +21,6 @@ import eu.alpinweiss.filegen.util.wrapper.AbstractDataWrapper;
 import eu.alpinweiss.filegen.util.generator.FieldGenerator;
 import eu.alpinweiss.filegen.util.vault.ParameterVault;
 import eu.alpinweiss.filegen.util.vault.ValueVault;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -101,11 +99,6 @@ public class DateRangeGenerator implements FieldGenerator {
 		@Override
 		public FieldType getFieldType() {
 			return FieldType.DATE;
-		}
-
-		@Override
-		public Date getDateValue() {
-			return null;
 		}
 	}
 

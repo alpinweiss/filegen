@@ -57,11 +57,9 @@ public class GenerateXlsxFileServiceImpl implements GenerateXlsxFileService {
 
 		outputWriterHolder.writeValueInLine("Excel data generation started");
 
-		//New Workbook
 		Workbook wb = new SXSSFWorkbook();
 
 		try {
-			//Cell style for header row
 			CellStyle cs = wb.createCellStyle();
 			cs.setFillForegroundColor(IndexedColors.LIME.getIndex());
 			cs.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
@@ -70,12 +68,10 @@ public class GenerateXlsxFileServiceImpl implements GenerateXlsxFileService {
 			f.setFontHeightInPoints((short) 12);
 			cs.setFont(f);
 
-			//New Sheet
 			SXSSFSheet sheet1 = (SXSSFSheet) wb.createSheet("dataSheet");
 
 			int columnCount = fieldDefinitionList.size();
 
-			//Create Hash Map of Field Definitions
 			Map<Integer, Input2TableInfo> input2TableInfoMap = new LinkedHashMap<>(columnCount);
 
 			for (int i = 0; i < columnCount; i++) {
