@@ -15,6 +15,7 @@
  */
 package eu.alpinweiss.filegen.util.generator.impl;
 
+import eu.alpinweiss.filegen.exception.InvalidFieldConfigurationException;
 import eu.alpinweiss.filegen.model.FieldDefinition;
 import eu.alpinweiss.filegen.model.FieldType;
 import eu.alpinweiss.filegen.model.Generate;
@@ -25,6 +26,9 @@ import eu.alpinweiss.filegen.util.vault.ValueVault;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -49,15 +53,10 @@ public class DateGenerator implements FieldGenerator {
 			if (Generate.Y.equals(fieldDefinition.getGenerate())) {
 				valueVault.storeValue(new DateDataWrapper());
 			} else {
-				valueVault.storeValue(new DateDataWrapper() {
-					@Override
-					public Date getDateValue() {
-						return null;
-					}
-				});
+				throw new InvalidFieldConfigurationException("Can't do anything without pattern and Generate:No");
 			}
 		} else {
-			if (Generate.Y.equals(fieldDefinition.getGenerate())) {
+			if (Generate.N.equals(fieldDefinition.getGenerate())) {
 				final String[] split = pattern.split(":");
 				if (split.length == 1) {
 					valueVault.storeValue(new DateDataWrapper());
@@ -76,7 +75,7 @@ public class DateGenerator implements FieldGenerator {
 					}
 				});
 			} else {
-				valueVault.storeValue(new DateDataWrapper());
+				throw new InvalidFieldConfigurationException("Misconfiguration, explicit Generate:Y and pattern");
 			}
 		}
 	}
@@ -90,7 +89,8 @@ public class DateGenerator implements FieldGenerator {
 
 		@Override
 		public Date getDateValue() {
-			return new Date();
+			LocalDate today = LocalDate.now();
+			return Date.from(today.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
 		}
 	}
 

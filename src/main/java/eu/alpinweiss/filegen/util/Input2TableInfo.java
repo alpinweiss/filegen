@@ -90,10 +90,10 @@ public class Input2TableInfo {
 
 	public void initCellStyle(Workbook wb) {
 		FieldType type = fieldDefinition.getType();
-		if (FieldType.DATE.equals(type)) {
+		if (FieldType.DATE.equals(type) || FieldType.DATERANGE.equals(type)) {
 			DataFormat dataFormat = wb.createDataFormat();
 			cellStyle = wb.createCellStyle();
-			cellStyle.setDataFormat(dataFormat.getFormat("dd/mm/yyyy"));
+			cellStyle.setDataFormat(dataFormat.getFormat("dd/MM/yyyy"));
 		}
 	}
 

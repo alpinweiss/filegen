@@ -25,6 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 
@@ -117,8 +118,8 @@ public class SheetProcessor implements Runnable {
 						FieldType fieldType = wrapper.getFieldType();
 						switch (fieldType) {
 							case DATE:
-								dataCell.setCellStyle(cellStyle);
 								dataCell.setCellValue(wrapper.getDateValue());
+								dataCell.setCellStyle(cellStyle);
 								break;
 							case FLOAT:
 							case INTEGER:
