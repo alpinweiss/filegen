@@ -4,7 +4,7 @@
 
 	<groupId>eu.alpinweiss.filegen</groupId>
 	<artifactId>filegen</artifactId>
-	<version>16.8.0</version>
+	<version>16.9.0</version>
 	<packaging>jar</packaging>
 
 	<name>filegen</name>
