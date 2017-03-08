@@ -45,7 +45,7 @@ public class IntegerGenerator implements FieldGenerator {
 		synchronized (this) {
 			final String pattern = fieldDefinition.getPattern();
 			if (Generate.Y.equals(fieldDefinition.getGenerate())) {
-				if (pattern != null && !"".equals(pattern)) {
+				if (!pattern.isEmpty()) {
 					if (generex == null) {
 						this.generex = new Generex(fieldDefinition.getPattern());
 					}
@@ -64,7 +64,7 @@ public class IntegerGenerator implements FieldGenerator {
 					});
 				}
 			} else {
-				if (pattern != null && !"".equals(pattern)) {
+				if (!pattern.isEmpty()) {
 					valueVault.storeValue(new StringDataWrapper() {
 						@Override
 						public String getStringValue() {

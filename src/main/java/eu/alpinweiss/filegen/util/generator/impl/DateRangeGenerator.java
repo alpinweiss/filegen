@@ -37,7 +37,6 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class DateRangeGenerator implements FieldGenerator {
 
-	public static final String EMPTY = "";
 	private final FieldDefinition fieldDefinition;
 	private List<Date> dates;
 
@@ -49,7 +48,7 @@ public class DateRangeGenerator implements FieldGenerator {
 	public void generate(ParameterVault parameterVault, ThreadLocalRandom randomGenerator, ValueVault valueVault) {
 		synchronized (this) {
 			String pattern = fieldDefinition.getPattern();
-			if (pattern == null || EMPTY.equals(pattern)) {
+			if (pattern.isEmpty()) {
 				valueVault.storeValue(new DateRangeDataWrapper());
 				return;
 			}

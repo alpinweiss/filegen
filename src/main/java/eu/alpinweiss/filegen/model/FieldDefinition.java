@@ -15,6 +15,8 @@
  */
 package eu.alpinweiss.filegen.model;
 
+import java.util.Optional;
+
 /**
  * {@link FieldDefinition}.
  *
@@ -26,7 +28,7 @@ public class FieldDefinition {
     private FieldType type;
     private String fieldName;
     private Generate generate;
-    private String pattern;
+    private Optional<String> pattern;
 
     public FieldType getType() {
         return type;
@@ -53,10 +55,10 @@ public class FieldDefinition {
     }
 
     public String getPattern() {
-        return pattern;
+        return pattern.orElse("").trim();
     }
 
     public void setPattern(String pattern) {
-        this.pattern = pattern;
+        this.pattern = Optional.ofNullable(pattern);
     }
 }

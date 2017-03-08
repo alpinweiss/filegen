@@ -49,7 +49,7 @@ public class DateGenerator implements FieldGenerator {
 	public void generate(ParameterVault parameterVault, ThreadLocalRandom randomGenerator, ValueVault valueVault) {
 		String pattern = fieldDefinition.getPattern();
 
-		if (pattern == null || "".equals(pattern)) {
+		if (pattern.isEmpty()) {
 			if (Generate.Y.equals(fieldDefinition.getGenerate())) {
 				valueVault.storeValue(new DateDataWrapper());
 			} else {

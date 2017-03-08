@@ -16,7 +16,7 @@
 package eu.alpinweiss.filegen.model;
 
 /**
- * {@link Generate}.
+ * {@link FieldType}.
  *
  * @author Aleksandrs.Severgins | <a href="http://alpinweiss.eu">SIA Alpinweiss</a>
  *

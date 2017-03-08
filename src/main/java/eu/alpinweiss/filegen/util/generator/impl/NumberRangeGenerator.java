@@ -33,7 +33,6 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class NumberRangeGenerator implements FieldGenerator {
 
-	public static final String EMPTY = "";
 	private final FieldDefinition fieldDefinition;
 
 	public NumberRangeGenerator(FieldDefinition fieldDefinition) {
@@ -44,7 +43,7 @@ public class NumberRangeGenerator implements FieldGenerator {
 	public void generate(ParameterVault parameterVault, ThreadLocalRandom randomGenerator, ValueVault valueVault) {
 		synchronized (this) {
 			final String pattern = fieldDefinition.getPattern();
-			if (pattern == null || EMPTY.equals(pattern)) {
+			if (pattern.isEmpty()) {
 				valueVault.storeValue(new NumberRangeDataWrapper());
 				return;
 			}

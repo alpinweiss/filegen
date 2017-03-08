@@ -38,7 +38,7 @@ public class AutoNumberGenerator implements FieldGenerator {
     public AutoNumberGenerator(FieldDefinition fieldDefinition) {
         this.fieldDefinition = fieldDefinition;
         final String pattern = this.fieldDefinition.getPattern();
-        if (!StringUtils.isEmpty(pattern)) {
+        if (!pattern.isEmpty()) {
             startNum = Integer.parseInt(pattern);
         }
     }

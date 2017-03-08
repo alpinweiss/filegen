@@ -32,7 +32,6 @@ import java.util.concurrent.ThreadLocalRandom;
 public class RangeGenerator implements FieldGenerator {
 
 	private final FieldDefinition fieldDefinition;
-	public static final String EMPTY = "";
 
 	public RangeGenerator(FieldDefinition fieldDefinition) {
 		this.fieldDefinition = fieldDefinition;
@@ -42,7 +41,7 @@ public class RangeGenerator implements FieldGenerator {
 	public void generate(ParameterVault parameterVault, ThreadLocalRandom randomGenerator, ValueVault valueVault) {
 		synchronized (this) {
 			final String pattern = fieldDefinition.getPattern();
-			if (pattern == null || EMPTY.equals(pattern)) {
+			if (pattern.isEmpty()) {
 				valueVault.storeValue(new StringRangeDataWrapper());
 				return;
 			}

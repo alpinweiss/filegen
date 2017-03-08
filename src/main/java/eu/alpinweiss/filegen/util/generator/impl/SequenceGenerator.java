@@ -48,7 +48,7 @@ public class SequenceGenerator implements FieldGenerator {
     public SequenceGenerator(FieldDefinition fieldDefinition) {
         this.fieldDefinition = fieldDefinition;
         final String pattern = this.fieldDefinition.getPattern();
-        if (!StringUtils.isEmpty(pattern) && pattern.matches(SEQUENCE_WITH_SUFFIX_AND_PREFIX)) {
+        if (!pattern.isEmpty() && pattern.matches(SEQUENCE_WITH_SUFFIX_AND_PREFIX)) {
             sequencePattern = cropPattern(pattern);
 
             try (Scanner scanner = new Scanner(sequencePattern[1])) {
