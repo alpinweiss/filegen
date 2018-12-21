@@ -1,8 +1,12 @@
 /.classpath
 /.project
+.gradle
+build
+out
 .settings
 target
 filegen.iml
 dependency-reduced-pom.xml
 .idea
 /bin
+outputtest.xlsx
